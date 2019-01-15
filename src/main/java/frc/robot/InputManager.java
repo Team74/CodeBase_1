@@ -38,6 +38,8 @@ public class InputManager implements Updateable {
     }
 
     public void update(double dt) {
+        m_buttons_pressed.put("a", m_controller_0.getAButton())
+        //get the other buttons we might need
         //however it is that we get input from the controller
         //and store the values in buttons_pressed/etc.
     }
