@@ -10,43 +10,43 @@ import frc.robot.behavior.master_implementations.PrimaryTeleopMaster;
 
 public class Robot extends TimedRobot {
 
-    SubsystemManager subsystem_manager;
-    InputManager input_manager;
+    SubsystemManager m_subsystem_manager;
+    InputManager m_input_manager;
 
-    Timer timer = new Timer();
-    double dt = 0;
+    Timer m_timer = new Timer();
+    double dt = 0;  //no m_ just for consistency with everywhere else
     private void updateTime() {
-        dt = timer.get();
-        timer.reset();
+        dt = m_timer.get();
+        m_timer.reset();
     }
 
 
     public void robotInit() {
-        subsystem_manager = new SubsystemManager(); //this will set up the whole robot and its subsystems
-        input_manager = new InputManager(); //this is the significantly smaller bit of code that handles input from the xbox controllers and such
+        m_subsystem_manager = new SubsystemManager(); //this will set up the whole robot and its subsystems
+        m_input_manager = new InputManager(); //this is the significantly smaller bit of code that handles input from the xbox controllers and such
 
-        timer.stop();
-        timer.reset();
+        m_timer.stop();
+        m_timer.reset();
     }
     public void autonomousInit() {
-        subsystem_manager.setCurrentMaster(new PathFollower_AutonMaster(subsystem_manager));
+        m_subsystem_manager.setCurrentMaster(new PathFollower_AutonMaster(m_subsystem_manager));
          //or whatever other auton we want -- we'll probably need something for SmartDashboard eventually
-         timer.start();
+         m_timer.start();
         }   
     public void autonomousPeriodic() {
         updateTime();
-        subsystem_manager.update(dt); 
+        m_subsystem_manager.update(dt); 
     }
     public void teleopInit() {
-        subsystem_manager.setCurrentMaster(new PrimaryTeleopMaster(subsystem_manager, input_manager));
+        m_subsystem_manager.setCurrentMaster(new PrimaryTeleopMaster(m_subsystem_manager, m_input_manager));
         //similarly, if we want to do, say, a different control scheme, a different teleopmaster could be subbed in that would interpret the inputs differently
-        timer.reset();
-        timer.start();
+        m_timer.reset();
+        m_timer.start();
     }
     public void teleopPeriodic() {
         updateTime();
-        input_manager.update(dt);
-        subsystem_manager.update(dt);
+        m_input_manager.update(dt);
+        m_subsystem_manager.update(dt);
     }
 
 }

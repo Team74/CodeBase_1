@@ -10,18 +10,19 @@ import frc.robot.behavior.Master;
 
 public class SubsystemManager implements Updateable {
 
-    private Master current_master;  //the thing that's currently giving this thing instructions.
-    private ArrayList<Updateable> listOfUpdatingObjects = new ArrayList<Updateable>();  //this will have duplicate references from the various things below, plus others -- positionTracker, etc.
-    public RobotMap robot_map;
+    private Master m_currentMaster;  //the thing that's currently giving this thing instructions.
+    private ArrayList<Updateable> m_listOfUpdatingObjects = new ArrayList<Updateable>();  //this will have duplicate references from the various things below, plus others -- positionTracker, etc.
 
-    public Drivetrain drivetrain;   //this will get the RobotMap passed in when it's created
+    //all the individual subsystems
+    public RobotMap m_robotMap;   //plus this one, which directly handles the physical components
+    public Drivetrain m_drivetrain;   //this will get the RobotMap passed in when it's created
     //etc. ...
     //incidentally, do we want these to be private? Commands should go from masters through SubsystemManager, and SubsystemManager can deal with converting that into individual commands.
 
     SubsystemManager() {
 
-        robot_map = new RobotMap(); //initializes all the physical hardware bits, but doesn't do anything further with them
-        drivetrain = new Drivetrain(robot_map);
+        m_robotMap = new RobotMap(); //initializes all the physical hardware bits, but doesn't do anything further with them
+        m_drivetrain = new Drivetrain(m_robotMap);
         // ... set up other Subsystems if present
         /*
         -setup all the Subsystems: Drivetrain, Grabbers, etc.
@@ -32,15 +33,15 @@ public class SubsystemManager implements Updateable {
         //EDIT TO THE PREVIOUS COMMENT: RobotMap should create a lot of these sorts of things, SubsystemManager sets them in a usable state
     }
 
-    public void setCurrentMaster(Master _current_master) {
-        current_master = _current_master;
+    public void setCurrentMaster(Master currentMaster) {
+        m_currentMaster = currentMaster;
     }
 
     public void update(double dt) {
-        for(int i = 0; i < listOfUpdatingObjects.size(); ++i){
-            listOfUpdatingObjects.get(i).update(dt);
+        for(int i = 0; i < m_listOfUpdatingObjects.size(); ++i){
+            m_listOfUpdatingObjects.get(i).update(dt);
         }
-        current_master.update(dt);    //current_master, which has a reference to this object, will call the various commands below to tell the robot to do things
+        m_currentMaster.update(dt);    //current_master, which has a reference to this object, will call the various commands below to tell the robot to do things
     }
 
         /*
