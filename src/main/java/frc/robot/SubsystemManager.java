@@ -5,7 +5,7 @@ Essentially the 'model' class -- keeps track of the state of the robot, contains
 */
 
 import java.util.ArrayList;
-
+import frc.robot.Updateable;
 import frc.robot.behavior.Master;
 
 public class SubsystemManager implements Updateable {

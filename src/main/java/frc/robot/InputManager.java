@@ -4,8 +4,9 @@ package frc.robot;
 Class that handles *human* input; for sensors, see SensorManager. Since the various TeleopMaster subclasses are the only thing that should be touching this class, it can get updated from there.
 */
 import java.util.HashMap;
-
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Updateable;
+
 
 public class InputManager implements Updateable {
 
