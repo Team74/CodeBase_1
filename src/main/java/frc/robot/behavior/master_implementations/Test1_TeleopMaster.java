@@ -8,10 +8,6 @@ public class Test1_TeleopMaster extends TeleopMaster {
     public Test1_TeleopMaster(SubsystemManager subsystem_manager, InputManager input_manager) { super(subsystem_manager, input_manager); }
 
     public void update(double dt) {  
-        if(m_input_manager.m_buttons_pressed.get("a")) {      
-            m_subsystem_manager.m_drivetrain.setMove(0.1, 0);
-        } else {
-            m_subsystem_manager.m_drivetrain.setMove(0, 0);
-        }
+        m_subsystem_manager.m_drivetrain.setMove(m_input_manager.m_joysticks.get("0ly"), m_input_manager.m_joysticks.get("0ry"));
     }
 }

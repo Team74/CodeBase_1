@@ -2,7 +2,8 @@ package frc.robot;
 
 import com.revrobotics.*;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
 /*
 This class sets up all the different things related to the PWM, plus some other stuff. It'll get passed in to other classes so they can get references back to the individual components.
 */
@@ -17,10 +18,12 @@ public class RobotMap {
     public WPI_TalonSRX Talon_5 = new WPI_TalonSRX(5);
     public WPI_TalonSRX Talon_6 = new WPI_TalonSRX(6);
 
+    public AHRS navX = new AHRS(SPI.Port.kMXP, (byte)60);
 
 
     RobotMap() {
         //sets up stuff if necessary
         Spark_1_E = new CANEncoder(Spark_1);
+
     }
 }

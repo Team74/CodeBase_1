@@ -1,8 +1,10 @@
 package frc.robot;
 
 import com.revrobotics.*;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.RobotMap;
 import frc.robot.Updateable;
@@ -14,6 +16,7 @@ public class Drivetrain implements Updateable {
     public WPI_TalonSRX lb_motor;
     public WPI_TalonSRX rf_motor;
     public WPI_TalonSRX rb_motor;
+    public AHRS gyro;
 
 
     Drivetrain(RobotMap robotmap) {
@@ -22,6 +25,10 @@ public class Drivetrain implements Updateable {
         lb_motor = robotmap.Talon_2;
         rf_motor = robotmap.Talon_5;
         rb_motor = robotmap.Talon_6;
+        gyro = robotmap.navX;
+
+        rf_motor.setInverted(true);
+        rb_motor.setInverted(true);
 
         lf_motor.setNeutralMode(NeutralMode.Brake);
         lb_motor.setNeutralMode(NeutralMode.Brake);
@@ -30,13 +37,16 @@ public class Drivetrain implements Updateable {
 
     }
 
-    public void setMove(double amount, double angle) {
+    public void setMove(double left, double right) {
         //TODO: Make angle do something here
 
-        lf_motor.set(amount);
-        lb_motor.set(amount);
-        rf_motor.set(amount);
-        rb_motor.set(amount);
+        lf_motor.set(left);
+        lb_motor.set(left);
+        rf_motor.set(right);
+        rb_motor.set(right);
+
+        System.out.println("Yaw: " + left);
+        System.out.println("Pitch: " + right);
 
     }
 
