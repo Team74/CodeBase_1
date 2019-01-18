@@ -22,14 +22,23 @@ public class InputManager implements Updateable {
 
 
     public InputManager() {
-        m_buttons.put("x", false);
-        m_buttons.put("y", false);
-        m_buttons.put("a", false);
-        m_buttons.put("b", false);
-        m_buttons.put("l_trigger", false);    //assume for now we'll never need the amount they're pressed down
-        m_buttons.put("r_trigger", false);
-        m_buttons.put("l_bumper", false);
-        m_buttons.put("r_bumper", false);
+        m_buttons.put("0x", false);
+        m_buttons.put("0y", false);
+        m_buttons.put("0a", false);
+        m_buttons.put("0b", false);
+        m_buttons.put("0l_trigger", false);    //assume for now we'll never need the amount they're pressed down
+        m_buttons.put("0r_trigger", false);
+        m_buttons.put("0l_bumper", false);
+        m_buttons.put("0r_bumper", false);
+
+        m_buttons.put("1x", false);
+        m_buttons.put("1y", false);
+        m_buttons.put("1a", false);
+        m_buttons.put("1b", false);
+        m_buttons.put("1l_trigger", false);    //assume for now we'll never need the amount they're pressed down
+        m_buttons.put("1r_trigger", false);
+        m_buttons.put("1l_bumper", false);
+        m_buttons.put("1r_bumper", false);
 
         m_joysticks.put("0lx", (double)0);
         m_joysticks.put("0ly", (double)0);
@@ -40,19 +49,27 @@ public class InputManager implements Updateable {
         m_joysticks.put("1rx", (double)0);
         m_joysticks.put("1ry", (double)0);
 
-
         //do whatever networktables voodoo is necessary to connect to the controller
     }
 
     public void update(double dt) {
-        m_buttons.put("x", m_controller_0.getXButton());
-        m_buttons.put("y", m_controller_0.getYButton());
-        m_buttons.put("a", m_controller_0.getAButton());
-        m_buttons.put("b", m_controller_0.getBButton());
+        m_buttons.put("0x", m_controller_0.getXButton());
+        m_buttons.put("0y", m_controller_0.getYButton());
+        m_buttons.put("0a", m_controller_0.getAButton());
+        m_buttons.put("0b", m_controller_0.getBButton());
         //m_buttons.put("l_trigger", m_controller_0.getAButton());   Not sure how to grab triggers, look into it
         //m_buttons.put("r_trigger", m_controller_0.getAButton());
-        m_buttons.put("l_bumper", m_controller_0.getBumper(Hand.kLeft));
-        m_buttons.put("r_bumper", m_controller_0.getBumper(Hand.kRight));
+        m_buttons.put("0l_bumper", m_controller_0.getBumper(Hand.kLeft));
+        m_buttons.put("0r_bumper", m_controller_0.getBumper(Hand.kRight));
+
+        m_buttons.put("1x", m_controller_0.getXButton());
+        m_buttons.put("1y", m_controller_0.getYButton());
+        m_buttons.put("1a", m_controller_0.getAButton());
+        m_buttons.put("1b", m_controller_0.getBButton());
+        //m_buttons.put("l_trigger", m_controller_0.getAButton());   Not sure how to grab triggers, look into it
+        //m_buttons.put("r_trigger", m_controller_0.getAButton());
+        m_buttons.put("1l_bumper", m_controller_0.getBumper(Hand.kLeft));
+        m_buttons.put("1r_bumper", m_controller_0.getBumper(Hand.kRight));
 
 
         m_joysticks.put("0lx", m_controller_0.getX(Hand.kLeft));
@@ -64,6 +81,8 @@ public class InputManager implements Updateable {
         m_joysticks.put("1rx", m_controller_1.getX(Hand.kRight));
         m_joysticks.put("1ry", m_controller_1.getY(Hand.kRight));
 
+        m_joysticks.put("1ry", m_controller_1.getY(Hand.kRight));
+        m_joysticks.put("1ry", m_controller_1.getY(Hand.kRight));
     }
 
 }
