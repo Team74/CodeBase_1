@@ -20,6 +20,7 @@ public class RobotMap {
 
     public AHRS navX = new AHRS(SPI.Port.kMXP, (byte)60);
 
+    //test
 
     RobotMap() {
         //sets up stuff if necessary
