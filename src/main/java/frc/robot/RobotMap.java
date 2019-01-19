@@ -10,31 +10,30 @@ This class sets up all the different things related to the PWM, plus some other 
 public class RobotMap {
     //bunch of references to motors and such
 
-    public CANSparkMax Spark_3 = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
-    public CANSparkMax Spark_4 = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
-    public CANSparkMax Spark_7 = new CANSparkMax(7, CANSparkMaxLowLevel.MotorType.kBrushless);
-    public CANSparkMax Spark_8 = new CANSparkMax(8, CANSparkMaxLowLevel.MotorType.kBrushless);
+    public CANSparkMax Drive_0 = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
+    public CANSparkMax Drive_1 = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
+    public CANSparkMax Drive_2 = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
+    public CANSparkMax Drive_3 = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-    public CANEncoder Spark_E_3;
-    public CANEncoder Spark_E_4;
-    public CANEncoder Spark_E_7;
-    public CANEncoder Spark_E_8;
+    public CANEncoder Drive_E_0;
+    public CANEncoder Drive_E_1;
+    public CANEncoder Drive_E_2;
+    public CANEncoder Drive_E_3;
 
 
-    public WPI_TalonSRX Talon_1 = new WPI_TalonSRX(1);
-    public WPI_TalonSRX Talon_2 = new WPI_TalonSRX(2);
-    public WPI_TalonSRX Talon_5 = new WPI_TalonSRX(5);
-    public WPI_TalonSRX Talon_6 = new WPI_TalonSRX(6);
+    public WPI_TalonSRX Steering_0 = new WPI_TalonSRX(5);
+    public WPI_TalonSRX Steering_1 = new WPI_TalonSRX(6);
+    public WPI_TalonSRX Steering_2 = new WPI_TalonSRX(7);
+    public WPI_TalonSRX Steering_3 = new WPI_TalonSRX(8);
 
     public AHRS navX = new AHRS(SPI.Port.kMXP, (byte)60);
 
     RobotMap() {
         //sets up stuff if necessary
-        Spark_E_3 = new CANEncoder(Spark_3);
-        Spark_E_4 = new CANEncoder(Spark_4);
-        Spark_E_7 = new CANEncoder(Spark_7);
-        Spark_E_8 = new CANEncoder(Spark_8);
-
+        Drive_E_0 = new CANEncoder(Drive_0);
+        Drive_E_1 = new CANEncoder(Drive_1);
+        Drive_E_2 = new CANEncoder(Drive_2);
+        Drive_E_3 = new CANEncoder(Drive_3);
 
     }
 }
