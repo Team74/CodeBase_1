@@ -67,54 +67,29 @@ public class SwerveModule {
 
         rotate_motor.configSelectedFeedbackSensor(FeedbackDevice.Analog, kPIDLoopIdx, kTimeoutMs);
         rotate_motor.setSensorPhase(kSensorPhase);
+        rotate_motor.configFeedbackNotContinuous(false, kTimeoutMs);
+    }
+
+    public void setModuleDirection(double targetAngle, double target_speed){
+        double currentRotation = rotate_motor.getSelectedSensorPosition();
+        currentRotation %= 2048;
+        //Change currentRotation to be in radians
+        currentRotation = Math.PI*(currentRotation/2048);
+        //Change target angle to be on the 0 to 2pi range
+        targetAngle = targetAngle < 0 ? targetAngle + 2*(Math.PI) : targetAngle;
+        
+
 
     }
 
-    public void setIndividualMove(double in_angle, double in_magnitude) {
-        //angle should be in range -pi to pi, 0 is straight ahead. magnitude -1 to 1
-        diff_angle = in_angle - angle;
-        new_angle = diff_angle;
-        if(Math.abs(diff_angle) > Math.PI / 2) {
-            new_angle -= Math.signum(diff_angle) * Math.PI;
-        }
-        if(Math.abs(new_angle) > Math.PI){
-            new_angle -= Math.signum(new_angle) * 2 * Math.PI;
-        }
-        double targetRotation = angleToEncoder(new_angle);
-
+    public void setMotors(double targetRotation, double targetSpeed) {
+        drive_motor.set(targetSpeed);
         rotate_motor.set(ControlMode.Position, targetRotation);
-        drive_motor.set(in_magnitude);
     }
 
-    public double angleToEncoder(double angle){ 
-        double encoderValue = ((angle / Math.PI) + 2) * 512;
-        return encoderValue;
+    public double angleToEncoder(double diff_angle){ 
+        double currentEncoderValue = rotate_motor.getSelectedSensorPosition();
+        double targetRotation = currentEncoderValue;
+        return targetRotation;
     }
-
-    /*public class HandleEncoder{
-        private double rotationCount = 1;
-        private double lastPosition = 0;
-        private double currentPosition;
-
-        public HandleEncoder(WPI_TalonSRX motor, boolean kSensorPhase){
-            rotate_motor.configSelectedFeedbackSensor(FeedbackDevice.Analog, kPIDLoopIdx, kTimeoutMs);
-            rotate_motor.setSensorPhase(kSensorPhase);
-        }
-
-        public double getPosition(){
-            currentPosition = rotate_motor.getSelectedSensorPosition();
-            if (currentPosition < 24 && lastPosition > 1000){
-                if (rotationCount == 1){rotationCount += 1;}
-                else{rotationCount -= 1;}
-            } else if (currentPosition > 1000 && lastPosition < 24){
-                if (rotationCount == 1){rotationCount += 1;}
-                else{rotationCount -= 1;}                
-            }
-            lastPosition = currentPosition;
-            if (rotationCount == 2){return currentPosition + 1024;}
-            else {return currentPosition;}
-
-
-        }
-    }*/
 }
