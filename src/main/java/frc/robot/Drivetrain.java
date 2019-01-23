@@ -57,10 +57,10 @@ public class Drivetrain implements Updateable {
         double lb_a = -Math.atan2(A,C);
         double rb_a = -Math.atan2(A,C);
 
-        rf.setIndividualMove(rf_a, rf_m);
-        lf.setIndividualMove(lf_a, lf_m);
-        lb.setIndividualMove(lb_a, lb_m);
-        rb.setIndividualMove(rb_a, rb_m);
+        rf.setModule(rf_a, rf_m);
+        lf.setModule(lf_a, lf_m);
+        lb.setModule(lb_a, lb_m);
+        rb.setModule(rb_a, rb_m);
 
     }
 
