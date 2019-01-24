@@ -8,12 +8,22 @@ import edu.wpi.first.wpilibj.SPI;
 This class sets up all the different things related to the PWM, plus some other stuff. It'll get passed in to other classes so they can get references back to the individual components.
 */
 public class RobotMap {
-    //bunch of references to motors and such
+    public final double wheelBaseWidth = 0.0;
+    public final double wheelBaseDepth = 0.0;
 
-    public CANSparkMax Drive_0 = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);
-    public CANSparkMax Drive_1 = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);
-    public CANSparkMax Drive_2 = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);
-    public CANSparkMax Drive_3 = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);
+    public final double wheelDiameter = 0.0;//Meters
+
+    public final double countsPerRev = 0.0;//ENcoder ticks per revolution for drive motors
+    
+    public final double maxVel = 0.0;
+    public final double maxAccel = 0.0;
+    public final double maxJerk = 0.0;
+
+    //bunch of references to motors and such
+    public CANSparkMax Drive_0 = new CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless);//Front left
+    public CANSparkMax Drive_1 = new CANSparkMax(2, CANSparkMaxLowLevel.MotorType.kBrushless);//Front right
+    public CANSparkMax Drive_2 = new CANSparkMax(3, CANSparkMaxLowLevel.MotorType.kBrushless);//Back left
+    public CANSparkMax Drive_3 = new CANSparkMax(4, CANSparkMaxLowLevel.MotorType.kBrushless);//Back right
 
     public CANEncoder Drive_E_0;
     public CANEncoder Drive_E_1;
@@ -28,7 +38,7 @@ public class RobotMap {
 
     public AHRS navX = new AHRS(SPI.Port.kMXP, (byte)60);
 
-    RobotMap() {
+    public RobotMap() {
         //sets up stuff if necessary
         Drive_E_0 = new CANEncoder(Drive_0);
         Drive_E_1 = new CANEncoder(Drive_1);
