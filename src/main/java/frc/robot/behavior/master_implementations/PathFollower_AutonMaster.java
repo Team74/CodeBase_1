@@ -3,6 +3,9 @@ package frc.robot.behavior.master_implementations;
 import frc.robot.SubsystemManager;
 import frc.robot.behavior.AutonMaster;
 import frc.robot.RobotMap;
+
+import static org.junit.Assume.assumeNoException;
+
 import frc.robot.Drivetrain;
 
 import jaci.pathfinder.Pathfinder;
@@ -13,9 +16,10 @@ import jaci.pathfinder.modifiers.SwerveModifier;
 
 public class PathFollower_AutonMaster extends AutonMaster {
 
+    public RobotMap map = m_subsystem_manager.m_robotMap;       // a reference -- do not try to make a new one.
+    public Drivetrain drive = m_subsystem_manager.m_drivetrain; // ditto
+
     public final double timeStep = 0.0;
-    public RobotMap map = new RobotMap();
-    public Drivetrain drive = new Drivetrain(RobotMap map);
     private SwerveModifier.Mode pathMode = SwerveModifier.Mode.SWERVE_DEFAULT;
     private Trajectory trajectory;
     private SwerveModifier modifier;
@@ -68,7 +72,7 @@ public class PathFollower_AutonMaster extends AutonMaster {
         lbFollower.setTrajectory(lb);
         rbFollower.setTrajectory(rb);
         //Null needs to be replaced with the getPosition() for encoders. Not the integrated NEOs though because they return doubles.
-        lfFollower.configureEncoder(null , map.countsPerRev, map.wheelDiameter);
+        lfFollower.configureEncoder(null, map.countsPerRev, map.wheelDiameter);
         rfFollower.configureEncoder(null, map.countsPerRev, map.wheelDiameter);
         lbFollower.configureEncoder(null, map.countsPerRev, map.wheelDiameter);
         rbFollower.configureEncoder(null, map.countsPerRev, map.wheelDiameter);
