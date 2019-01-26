@@ -2,12 +2,19 @@ package frc.robot;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
+import com.revrobotics.CANPIDController;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
+import frc.robot.SubsystemManager;
+import frc.robot.RobotMap;
+
 public class SwerveModule {
+    public final double maxVel = 0.0;
+
     public CANSparkMax drive_motor;
     public CANEncoder drive_encoder;
     public WPI_TalonSRX rotate_motor;
@@ -15,34 +22,21 @@ public class SwerveModule {
     private double targetRotation;
     private double targetSpeed;
 
-    public static int kSlotIdx = 0;
-    public static int kPIDLoopIdx = 0;
-    public static int kTimeoutMs = 30;
-    public static boolean kSensorPhase = false;
-    public static boolean kMotorInvert = false;
+    public final int kSlotIdx = 0;
+    public final int kPIDLoopIdx = 0;
+    public final int kTimeoutMs = 30;
 
-    public static double kP = 0;
-    public static double kI = 0;
-    public static double kD = 0;
-    public static double kF = 0;
-    public static double kIZone = 0;
+    CANPIDController velController = new CANPIDController(drive_motor);
 
     public SwerveModule(CANSparkMax _drive_motor, CANEncoder _drive_encoder, WPI_TalonSRX _rotate_motor) {
         drive_motor = _drive_motor;
         rotate_motor = _rotate_motor;
         drive_encoder = _drive_encoder;
+
     }
 
-    public void instantiateSteeringPID(double _kP, double _kI, double _kD, double _kF, double _kIZone, boolean _kSensorPhase, boolean _kMotorInvert){
+    public void instantiateSteeringPID(double kP, double kI, double kD, double kF, double kIZone, boolean kSensorPhase, boolean kMotorInvert){
         //HandleEncoder encoder = new HandleEncoder(rotate_motor, kSensorPhase);
-        kP = _kP;
-        kI = _kI;
-        kD = _kD;
-        kF = _kF;
-        kIZone = _kIZone;
-        kSensorPhase = _kSensorPhase;
-        kMotorInvert = _kMotorInvert;
-
         rotate_motor.setInverted(kMotorInvert);
 
         rotate_motor.configNominalOutputForward(0, kTimeoutMs);
@@ -62,6 +56,20 @@ public class SwerveModule {
         rotate_motor.configFeedbackNotContinuous(false, kTimeoutMs);
     }
 
+    public void instantiateVelocityPID(double kP, double kI, double kD, double kF, double kIZone) {
+        //We're going to tune the gains using the tuner than hardcode them.
+        /*
+        velController.setP(kP, kSlotIdx);
+        velController.setI(kI, kSlotIdx);
+        velController.setD(kD, kSlotIdx);
+        velController.setFF(kF, kSlotIdx);
+        velController.setIZone(kIZone, kSlotIdx);
+        drive_motor.burnFlash();
+        */
+
+
+    }
+
     public void setModule(double targetAngle, double _targetSpeed){
         double totalRotation;
         double currentRotation;
@@ -73,7 +81,7 @@ public class SwerveModule {
         totalRotation= rotate_motor.getSelectedSensorPosition();
         currentRotation = totalRotation % 2048;
         //Change currentRotation to be in radians
-        currentAngle = Math.PI*(currentRotation/2048);
+        currentAngle = 2*Math.PI*(currentRotation/2048);
         //Change target angle to be on the 0 to 2pi range
         targetAngle = targetAngle < 0 ? targetAngle + 2*(Math.PI) : targetAngle;
         //Calculate the differance in angle
@@ -103,7 +111,8 @@ public class SwerveModule {
     }
 
     public void setMotors(double _targetRotation, double _targetSpeed) {
-        drive_motor.set(_targetSpeed);
+        targetSpeed = _targetSpeed * maxVel;//This needs to be converted to the "native units of RPM" for the SparkMax, whatever that means.
+        velController.setReference(targetSpeed, ControlType.kVelocity);
         rotate_motor.set(ControlMode.Position, _targetRotation);
     }
     public double angleToEncoder(double angle){

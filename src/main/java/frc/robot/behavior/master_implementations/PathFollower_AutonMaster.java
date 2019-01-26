@@ -34,13 +34,20 @@ public class PathFollower_AutonMaster extends AutonMaster {
 
     public PathFollower_AutonMaster(SubsystemManager subsystem_manager) {
         super(subsystem_manager);
+        // kP, kI, kD, 1/maxVel, acceleration gain
+        lfFollower.configurePIDVA(1.0, 0.0, 0.0, 1/map.maxVel, 0);
+        rfFollower.configurePIDVA(1.0, 0.0, 0.0, 1/map.maxVel, 0);
+        lbFollower.configurePIDVA(1.0, 0.0, 0.0, 1/map.maxVel, 0);
+        rbFollower.configurePIDVA(1.0, 0.0, 0.0, 1/map.maxVel, 0);
+
     }
 
     public void update(double dt) {  
         //Using Pathfinder to follow the path
         //https://github.com/JacisNonsense/Pathfinder/wiki/Pathfinder-for-FRC---Java
         
-        //null needs to be replaced with a get encoder position
+        //!! null needs to be replaced with a get encoder position !!
+        //!! Figure out what domain get heading returns !!
         drive.lf.setModule(Pathfinder.boundHalfDegrees(Pathfinder.r2d(lfFollower.getHeading())), lfFollower.calculate(null));
         drive.rf.setModule(Pathfinder.boundHalfDegrees(Pathfinder.r2d(rfFollower.getHeading())), rfFollower.calculate(null));
         drive.lb.setModule(Pathfinder.boundHalfDegrees(Pathfinder.r2d(lbFollower.getHeading())), lbFollower.calculate(null));
