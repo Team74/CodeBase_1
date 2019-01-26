@@ -53,11 +53,13 @@ public class Drivetrain implements Updateable {
         swerveVectors[3][1] = Math.sqrt(Math.pow(A,2) + Math.pow(C,2));//rb
 
         double max = swerveVectors[1][1]; max = swerveVectors[0][1] > max ? swerveVectors[0][1] : max; max = swerveVectors[2][1] > max ? swerveVectors[2][1] : max; max = swerveVectors[3][1] > max ? swerveVectors[3][1] : max;
+        if (max > 1){
         swerveVectors[1][1] /= max; swerveVectors[0][1] /= max; swerveVectors[2][1] /= max; swerveVectors[3][1] /= max; //normalizing them
+        }
 
         swerveVectors[0][0] = -Math.atan2(B,D);//lf    these are negative because for some reason we're doing angles in the opposite direction
         swerveVectors[1][0] = -Math.atan2(B,C);//rf  we should maybe change that
-        swerveVectors[2][0] = -Math.atan2(A,C);//lb
+        swerveVectors[2][0] = -Math.atan2(A,D);//lb
         swerveVectors[3][0] = -Math.atan2(A,C);//rb
 
         manageModules(swerveVectors);
