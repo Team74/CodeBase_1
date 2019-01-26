@@ -8,13 +8,15 @@ import edu.wpi.first.wpilibj.SPI;
 This class sets up all the different things related to the PWM, plus some other stuff. It'll get passed in to other classes so they can get references back to the individual components.
 */
 public class RobotMap {
+    //These need to be set in meters per second
     public final double wheelBaseWidth = 0.0;
     public final double wheelBaseDepth = 0.0;
 
     public final double wheelDiameter = 0.0;//Meters
 
-    public final double countsPerRev = 0.0;//ENcoder ticks per revolution for drive motors
+    public final double countsPerRev = 0.0;//Encoder ticks per revolution for drive motors
     
+    //These need to be in meters per second
     public final double maxVel = 0.0;
     public final double maxAccel = 0.0;
     public final double maxJerk = 0.0;
