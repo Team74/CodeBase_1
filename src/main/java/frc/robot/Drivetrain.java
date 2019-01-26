@@ -50,11 +50,13 @@ public class Drivetrain implements Updateable {
         double rb_m = Math.sqrt(Math.pow(A,2) + Math.pow(C,2));
 
         double max = rf_m; max = lf_m > max ? lf_m : max; max = lb_m > max ? lb_m : max; max = rb_m > max ? rb_m : max;
-        rf_m /= max; lf_m /= max; lb_m /= max; rb_m /= max; //normalizing them
-
+        if(max > 1) {
+          rf_m /= max; lf_m /= max; lb_m /= max; rb_m /= max; //normalizing them
+        }
+        
         double rf_a = -Math.atan2(B,C); //these are negative because for some reason we're doing angles in the opposite direction
         double lf_a = -Math.atan2(B,D); //we should maybe change that
-        double lb_a = -Math.atan2(A,C);
+        double lb_a = -Math.atan2(A,D);
         double rb_a = -Math.atan2(A,C);
 
         rf.setModule(rf_a, rf_m);
