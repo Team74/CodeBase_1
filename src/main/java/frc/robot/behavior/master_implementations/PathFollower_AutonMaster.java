@@ -7,6 +7,7 @@ import frc.robot.RobotMap;
 import static org.junit.Assume.assumeNoException;
 
 import frc.robot.Drivetrain;
+import frc.robot.behavior.master_implementations.Paths;
 
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.followers.EncoderFollower;
@@ -18,15 +19,19 @@ public class PathFollower_AutonMaster extends AutonMaster {
 
     public RobotMap map = m_subsystem_manager.m_robotMap;       // a reference -- do not try to make a new one.
     public Drivetrain drive = m_subsystem_manager.m_drivetrain; // ditto
+    public Paths paths = new Paths();
 
     public final double timeStep = 0.0;
+
     private SwerveModifier.Mode pathMode = SwerveModifier.Mode.SWERVE_DEFAULT;
     private Trajectory trajectory;
     private SwerveModifier modifier;
+
     private Trajectory lf;
     private Trajectory rf;
     private Trajectory lb;
     private Trajectory rb;
+
     private EncoderFollower lfFollower = new EncoderFollower();
     private EncoderFollower rfFollower = new EncoderFollower();
     private EncoderFollower lbFollower = new EncoderFollower();
@@ -35,10 +40,10 @@ public class PathFollower_AutonMaster extends AutonMaster {
     public PathFollower_AutonMaster(SubsystemManager subsystem_manager) {
         super(subsystem_manager);
         // kP, kI, kD, 1/maxVel, acceleration gain
-        lfFollower.configurePIDVA(1.0, 0.0, 0.0, 1/map.maxVel, 0);
-        rfFollower.configurePIDVA(1.0, 0.0, 0.0, 1/map.maxVel, 0);
-        lbFollower.configurePIDVA(1.0, 0.0, 0.0, 1/map.maxVel, 0);
-        rbFollower.configurePIDVA(1.0, 0.0, 0.0, 1/map.maxVel, 0);
+        lfFollower.configurePIDVA(0.0, 0.0, 0.0, 1/map.maxVel, 0);
+        rfFollower.configurePIDVA(0.0, 0.0, 0.0, 1/map.maxVel, 0);
+        lbFollower.configurePIDVA(0.0, 0.0, 0.0, 1/map.maxVel, 0);
+        rbFollower.configurePIDVA(0.0, 0.0, 0.0, 1/map.maxVel, 0);
 
     }
 
@@ -57,7 +62,7 @@ public class PathFollower_AutonMaster extends AutonMaster {
 
     }
 
-    public void pathToTrajectory(Waypoint[] path){
+    public void pathToTrajectory(Waypoint[] path, boolean isReversed) {
         //Set up trajectory configs
         Trajectory.Config config = new Trajectory.Config(
             Trajectory.FitMethod.HERMITE_QUINTIC, Trajectory.Config.SAMPLES_HIGH, timeStep, map.maxVel, map.maxAccel, map.maxJerk
