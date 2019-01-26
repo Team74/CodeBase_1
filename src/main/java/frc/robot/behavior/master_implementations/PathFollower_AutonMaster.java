@@ -51,15 +51,19 @@ public class PathFollower_AutonMaster extends AutonMaster {
         //Using Pathfinder to follow the path
         //https://github.com/JacisNonsense/Pathfinder/wiki/Pathfinder-for-FRC---Java
         
+        double[][] swerveVectors = new double[4][2];//{ {lf_a, lf_m}, {rf_a, rf_m}, {lb_a, lb_m}, {rb_a, rf_a} }
         //!! null needs to be replaced with a get encoder position !!
         //!! Figure out what domain get heading returns !!
-        drive.lf.setModule(Pathfinder.boundHalfDegrees(Pathfinder.r2d(lfFollower.getHeading())), lfFollower.calculate(null));
-        drive.rf.setModule(Pathfinder.boundHalfDegrees(Pathfinder.r2d(rfFollower.getHeading())), rfFollower.calculate(null));
-        drive.lb.setModule(Pathfinder.boundHalfDegrees(Pathfinder.r2d(lbFollower.getHeading())), lbFollower.calculate(null));
-        drive.rb.setModule(Pathfinder.boundHalfDegrees(Pathfinder.r2d(rbFollower.getHeading())), rbFollower.calculate(null));
-        
-        
+        swerveVectors[0][0] = Pathfinder.boundHalfDegrees(Pathfinder.r2d(lfFollower.getHeading()));
+        swerveVectors[0][1] = lfFollower.calculate(null);
+        swerveVectors[1][0] = Pathfinder.boundHalfDegrees(Pathfinder.r2d(rfFollower.getHeading()));
+        swerveVectors[1][1] = rfFollower.calculate(null);
+        swerveVectors[2][0] = Pathfinder.boundHalfDegrees(Pathfinder.r2d(lbFollower.getHeading()));
+        swerveVectors[2][1] = lbFollower.calculate(null);
+        swerveVectors[3][0] = Pathfinder.boundHalfDegrees(Pathfinder.r2d(rbFollower.getHeading()));
+        swerveVectors[3][1] = rbFollower.calculate(null);
 
+        drive.manageModules(swerveVectors);
     }
 
     public void pathToTrajectory(Waypoint[] path, boolean isReversed) {

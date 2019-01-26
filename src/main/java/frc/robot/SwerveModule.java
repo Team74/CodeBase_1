@@ -9,9 +9,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
-import frc.robot.SubsystemManager;
-import frc.robot.RobotMap;
-
 public class SwerveModule {
     public final double maxVel = 0.0;
 

@@ -1,8 +1,5 @@
 package frc.robot;
 
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import frc.robot.RobotMap;
@@ -16,11 +13,12 @@ public class Drivetrain implements Updateable {
     public SwerveModule rf;
     public SwerveModule rb;
 
+    public double m_swerveVectors[][];//{ {lf_a, lf_m}, {rf_a, rf_m}, {lb_a, lb_m}, {rb_a, rf_a} }
+
     public AHRS gyro;
 
-    private final double WIDTH = 0.6;
-    private final double LENGTH = 0.8;
-
+    private final double WIDTH;
+    private final double LENGTH;
 
     Drivetrain(RobotMap robotmap) {
 
@@ -31,37 +29,47 @@ public class Drivetrain implements Updateable {
 
         gyro = robotmap.navX;
 
+        WIDTH = robotmap.wheelBaseWidth;
+        LENGTH = robotmap.wheelBaseDepth;
+
     }
 
     public void setMove(double speed, double angle, double rotation) {
       //rotation is in rad/sec
       //info for this section from https://www.chiefdelphi.com/t/paper-4-wheel-independent-drive-independent-steering-swerve/107383
+        double[][] swerveVectors = new double[4][2];//{ {lf_a, lf_m}, {rf_a, rf_m}, {lb_a, lb_m}, {rb_a, rf_a} }
+      
         double vx = speed*Math.sin(angle); //angle is measured from 0 being straight forward, positive turning right, from -pi to pi
         double vy = speed*Math.cos(angle);
 
-        double A = vx - rotation*LENGTH/2;
-        double B = vx + rotation*LENGTH/2;
-        double C = vy - rotation*WIDTH/2;
-        double D = vy + rotation*WIDTH/2;
+        double A = vx - rotation*(LENGTH)/2;
+        double B = vx + rotation*(LENGTH)/2;
+        double C = vy - rotation*(WIDTH)/2;
+        double D = vy + rotation*(WIDTH)/2;
+        
+        swerveVectors[0][1] = Math.sqrt(Math.pow(B,2) + Math.pow(D,2));//lf
+        swerveVectors[1][1] = Math.sqrt(Math.pow(B,2) + Math.pow(C,2));//rf
+        swerveVectors[2][1] = Math.sqrt(Math.pow(A,2) + Math.pow(D,2));//lb
+        swerveVectors[3][1] = Math.sqrt(Math.pow(A,2) + Math.pow(C,2));//rb
 
-        double rf_m = Math.sqrt(Math.pow(B,2) + Math.pow(C,2));
-        double lf_m = Math.sqrt(Math.pow(B,2) + Math.pow(D,2));
-        double lb_m = Math.sqrt(Math.pow(A,2) + Math.pow(D,2));
-        double rb_m = Math.sqrt(Math.pow(A,2) + Math.pow(C,2));
+        double max = swerveVectors[1][1]; max = swerveVectors[0][1] > max ? swerveVectors[0][1] : max; max = swerveVectors[2][1] > max ? swerveVectors[2][1] : max; max = swerveVectors[3][1] > max ? swerveVectors[3][1] : max;
+        swerveVectors[1][1] /= max; swerveVectors[0][1] /= max; swerveVectors[2][1] /= max; swerveVectors[3][1] /= max; //normalizing them
 
-        double max = rf_m; max = lf_m > max ? lf_m : max; max = lb_m > max ? lb_m : max; max = rb_m > max ? rb_m : max;
-        rf_m /= max; lf_m /= max; lb_m /= max; rb_m /= max; //normalizing them
+        swerveVectors[0][0] = -Math.atan2(B,D);//lf    these are negative because for some reason we're doing angles in the opposite direction
+        swerveVectors[1][0] = -Math.atan2(B,C);//rf  we should maybe change that
+        swerveVectors[2][0] = -Math.atan2(A,C);//lb
+        swerveVectors[3][0] = -Math.atan2(A,C);//rb
 
-        double rf_a = -Math.atan2(B,C); //these are negative because for some reason we're doing angles in the opposite direction
-        double lf_a = -Math.atan2(B,D); //we should maybe change that
-        double lb_a = -Math.atan2(A,C);
-        double rb_a = -Math.atan2(A,C);
+        manageModules(swerveVectors);
+        //Args are, TargetAngle, TargetSpeed
+    }
 
-        rf.setModule(rf_a, rf_m);
-        lf.setModule(lf_a, lf_m);
-        lb.setModule(lb_a, lb_m);
-        rb.setModule(rb_a, rb_m);
-
+    public void manageModules(double swerveVectors[][]){
+        m_swerveVectors = swerveVectors;
+        lf.setModule(m_swerveVectors[0][0], m_swerveVectors[0][1]);
+        rf.setModule(m_swerveVectors[1][0], m_swerveVectors[1][1]);
+        lb.setModule(m_swerveVectors[2][0], m_swerveVectors[2][1]);
+        rb.setModule(m_swerveVectors[3][0], m_swerveVectors[3][1]);
     }
 
     public void update(double dt) {
