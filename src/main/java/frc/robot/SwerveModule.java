@@ -86,9 +86,11 @@ public class SwerveModule {
         //Change target angle to be on the 0 to 2pi range
         targetAngle = targetAngle < 0 ? targetAngle + 2*(Math.PI) : targetAngle;
         //Calculate the differance in angle
-        angleDelta = targetAngle - currentAngle;
+        angleDelta = (targetAngle - currentAngle)/Math.PI*180;  //convert to degrees
         absAngleDelta = Math.abs(angleDelta);
         //Begin checking cases
+        targetSpeed = _targetSpeed;
+
         if (0 <= absAngleDelta && absAngleDelta <= 90) {
             angleModifier = angleDelta;
         }else if (90 < absAngleDelta && absAngleDelta <= 180) {
@@ -108,6 +110,10 @@ public class SwerveModule {
         angleModifier = angleToEncoder(angleModifier);
         //Add modifier to current total rotation to get new referance point
         targetRotation = currentRotation + angleModifier;
+        //targetRotation = (double)(Math.round(targetRotation));
+        if(targetRotation < 0) {
+          targetRotation += 2048;
+        }
         setMotors(targetRotation, targetSpeed);
     }
 
