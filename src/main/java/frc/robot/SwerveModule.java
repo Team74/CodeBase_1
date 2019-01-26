@@ -64,6 +64,7 @@ public class SwerveModule {
         velController.setD(kD, kSlotIdx);
         velController.setFF(kF, kSlotIdx);
         velController.setIZone(kIZone, kSlotIdx);
+        velController.setOutputRange(-1.0, 1.0, kSlotIdx);
         drive_motor.burnFlash();
         */
 
