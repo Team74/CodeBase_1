@@ -58,7 +58,7 @@ public class Drivetrain implements Updateable {
         }
 
         swerveVectors[0][0] = -Math.atan2(B,D);//lf    these are negative because for some reason we're doing angles in the opposite direction
-        swerveVectors[1][0] = -Math.atan2(B,C);//rf  we should maybe change that
+        swerveVectors[1][0] = -Math.atan2(B,C);//rf    we should maybe change that
         swerveVectors[2][0] = -Math.atan2(A,D);//lb
         swerveVectors[3][0] = -Math.atan2(A,C);//rb
 

@@ -115,7 +115,8 @@ public class SwerveModule {
     }
 
     public void setMotors(double _targetRotation, double _targetSpeed) {
-        targetSpeed = _targetSpeed * maxVel;//This needs to be converted to the "native units of RPM" for the SparkMax, whatever that means.
+        //This needs to be converted to the "native units of RPM" for the SparkMax, whatever that means, from the Meters per Seconds.
+        targetSpeed = _targetSpeed * maxVel;
         velController.setReference(targetSpeed, ControlType.kVelocity);
         rotate_motor.set(ControlMode.Position, _targetRotation);
     }
