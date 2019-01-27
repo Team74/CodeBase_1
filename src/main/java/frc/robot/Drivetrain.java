@@ -27,6 +27,18 @@ public class Drivetrain implements Updateable {
         rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2);
         rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3);
 
+        //Set up PIDFs here
+        /*
+        lf.instantiateSteeringPID(kP, kI, kD, kF, kIZone, kSensorPhase, kMotorInvert);
+        lf.instantiateVelocityPID(kP, kI, kD, kF, kIZone);
+        rf.instantiateSteeringPID(kP, kI, kD, kF, kIZone, kSensorPhase, kMotorInvert);
+        rf.instantiateVelocityPID(kP, kI, kD, kF, kIZone);
+        lb.instantiateSteeringPID(kP, kI, kD, kF, kIZone, kSensorPhase, kMotorInvert);
+        lb.instantiateVelocityPID(kP, kI, kD, kF, kIZone);
+        rb.instantiateSteeringPID(kP, kI, kD, kF, kIZone, kSensorPhase, kMotorInvert);
+        rb.instantiateVelocityPID(kP, kI, kD, kF, kIZone);
+        */
+
         gyro = robotmap.navX;
 
         WIDTH = robotmap.wheelBaseWidth;

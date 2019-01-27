@@ -8,6 +8,7 @@ import com.revrobotics.CANPIDController;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class SwerveModule {
     public final double maxVel = 0.0;
@@ -34,6 +35,11 @@ public class SwerveModule {
 
     public void instantiateSteeringPID(double kP, double kI, double kD, double kF, double kIZone, boolean kSensorPhase, boolean kMotorInvert){
         //HandleEncoder encoder = new HandleEncoder(rotate_motor, kSensorPhase);
+        //Start by reseting everything to factory defaults
+        rotate_motor.configFactoryDefault(kTimeoutMs);
+
+        rotate_motor.setNeutralMode(NeutralMode.Brake);
+
         rotate_motor.setInverted(kMotorInvert);
 
         rotate_motor.configNominalOutputForward(0, kTimeoutMs);

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.SPI;
 This class sets up all the different things related to the PWM, plus some other stuff. It'll get passed in to other classes so they can get references back to the individual components.
 */
 public class RobotMap {
-    //These need to be set in meters per second
+    //These need to be set in meters
     public final double wheelBaseWidth = 0.0;
     public final double wheelBaseDepth = 0.0;
 

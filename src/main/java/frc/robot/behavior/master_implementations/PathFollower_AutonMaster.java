@@ -53,14 +53,14 @@ public class PathFollower_AutonMaster extends AutonMaster {
         
         double[][] swerveVectors = new double[4][2];//{ {lf_a, lf_m}, {rf_a, rf_m}, {lb_a, lb_m}, {rb_a, rf_a} }
         //!! null needs to be replaced with a get encoder position !!
-        //!! Figure out what domain get heading returns !!
-        swerveVectors[0][0] = Pathfinder.boundHalfDegrees(Pathfinder.r2d(lfFollower.getHeading()));
+        //Pathfinder.boundHalfDegrees(Pathfinder.r2d(lfFollower.getHeading())) returns a degree value on the scale of -180 to 180, We conert it to d
+        swerveVectors[0][0] = boundHalfRadians(lfFollower.getHeading());
         swerveVectors[0][1] = lfFollower.calculate(null);
-        swerveVectors[1][0] = Pathfinder.boundHalfDegrees(Pathfinder.r2d(rfFollower.getHeading()));
+        swerveVectors[1][0] = boundHalfRadians(rfFollower.getHeading());
         swerveVectors[1][1] = rfFollower.calculate(null);
-        swerveVectors[2][0] = Pathfinder.boundHalfDegrees(Pathfinder.r2d(lbFollower.getHeading()));
+        swerveVectors[2][0] = boundHalfRadians(lbFollower.getHeading());
         swerveVectors[2][1] = lbFollower.calculate(null);
-        swerveVectors[3][0] = Pathfinder.boundHalfDegrees(Pathfinder.r2d(rbFollower.getHeading()));
+        swerveVectors[3][0] = boundHalfRadians(rbFollower.getHeading());
         swerveVectors[3][1] = rbFollower.calculate(null);
 
         drive.manageModules(swerveVectors);
@@ -93,4 +93,9 @@ public class PathFollower_AutonMaster extends AutonMaster {
         lbFollower.configureEncoder(null, map.countsPerRev, map.wheelDiameter);
         rbFollower.configureEncoder(null, map.countsPerRev, map.wheelDiameter);
     }
+
+    public static double boundHalfRadians(double angleRadians) {
+        while (angleRadians >= Math.PI) angleRadians -= 2*(Math.PI);
+        while (angleRadians < -(Math.PI)) angleRadians += 2*(Math.PI);
+        return angleRadians;
 }

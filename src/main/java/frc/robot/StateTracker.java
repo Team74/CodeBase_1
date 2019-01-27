@@ -13,10 +13,8 @@ public class StateTracker implements Updateable {
     public double yPose;
     public double heading;
 
-    public StateTracker(SubsystemManager _subsystem_manager, double _initialX, double _initialY){
+    public StateTracker(SubsystemManager _subsystem_manager){
         m_subsystem_manager = _subsystem_manager;
-        xPose = _initialX;
-        yPose = _initialY;
     }
 
     //Use the swerve module vectors from PathFollower to track the robots Position as we move through auton
