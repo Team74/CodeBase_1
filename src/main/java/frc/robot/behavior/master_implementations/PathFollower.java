@@ -1,7 +1,7 @@
 package frc.robot.behavior.master_implementations;
 
 import frc.robot.SubsystemManager;
-import frc.robot.behavior.AutonMaster;
+import frc.robot.behavior.master_implementations.Implemented_AutonMaster;
 import frc.robot.RobotMap;
 
 import static org.junit.Assume.assumeNoException;
@@ -15,7 +15,7 @@ import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.SwerveModifier;
 
-public class PathFollower_AutonMaster extends AutonMaster {
+public class PathFollower extends Implemented_AutonMaster {
 
     public RobotMap map = m_subsystem_manager.m_robotMap;       // a reference -- do not try to make a new one.
     public Drivetrain drive = m_subsystem_manager.m_drivetrain; // ditto
@@ -37,7 +37,7 @@ public class PathFollower_AutonMaster extends AutonMaster {
     private EncoderFollower lbFollower = new EncoderFollower();
     private EncoderFollower rbFollower = new EncoderFollower();
 
-    public PathFollower_AutonMaster(SubsystemManager subsystem_manager) {
+    public PathFollower(SubsystemManager subsystem_manager) {
         super(subsystem_manager);
         // kP, kI, kD, 1/maxVel, acceleration gain
         lfFollower.configurePIDVA(0.0, 0.0, 0.0, 1/map.maxVel, 0);
@@ -98,4 +98,5 @@ public class PathFollower_AutonMaster extends AutonMaster {
         while (angleRadians >= Math.PI) angleRadians -= 2*(Math.PI);
         while (angleRadians < -(Math.PI)) angleRadians += 2*(Math.PI);
         return angleRadians;
+    }
 }

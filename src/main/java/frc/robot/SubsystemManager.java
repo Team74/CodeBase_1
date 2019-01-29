@@ -10,7 +10,7 @@ import frc.robot.behavior.Master;
 
 public class SubsystemManager implements Updateable {
 
-    private Master m_currentMaster;  //the thing that's currently giving this thing instructions.
+    public Master m_currentMaster;  //the thing that's currently giving this thing instructions.
     private ArrayList<Updateable> m_listOfUpdatingObjects = new ArrayList<Updateable>();  //this will have duplicate references from the various things below, plus others -- positionTracker, etc.
 
     //all the individual subsystems

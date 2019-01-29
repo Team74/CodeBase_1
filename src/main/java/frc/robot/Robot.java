@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 import frc.robot.SubsystemManager;
 import frc.robot.InputManager;
-import frc.robot.behavior.master_implementations.PathFollower_AutonMaster;
+import frc.robot.behavior.master_implementations.Implemented_AutonMaster;
 import frc.robot.behavior.master_implementations.Test1_TeleopMaster;
 
 public class Robot extends TimedRobot {
@@ -29,8 +29,10 @@ public class Robot extends TimedRobot {
         m_timer.reset();
     }
     public void autonomousInit() {
-        m_subsystem_manager.setCurrentMaster(new PathFollower_AutonMaster(m_subsystem_manager));
+        m_subsystem_manager.setCurrentMaster(new Implemented_AutonMaster(m_subsystem_manager));
          //or whatever other auton we want -- we'll probably need something for SmartDashboard eventually
+
+         m_subsystem_manager.m_currentMaster.currentAuto = "";
          m_timer.start();
         }   
     public void autonomousPeriodic() {
