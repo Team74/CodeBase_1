@@ -33,7 +33,7 @@ public class RobotMap {
     public CANEncoder Drive_E_3;
 
 
-    public WPI_TalonSRX Steering_0 = new WPI_TalonSRX(1);//Front left
+    public WPI_TalonSRX Steering_0 = new WPI_TalonSRX(37);//Front left
     public WPI_TalonSRX Steering_1 = new WPI_TalonSRX(3);//Back left
     public WPI_TalonSRX Steering_2 = new WPI_TalonSRX(4);//Front right
     public WPI_TalonSRX Steering_3 = new WPI_TalonSRX(5);//Back right

@@ -22,7 +22,6 @@ public class StateTracker implements Updateable {
         double xPoseMod = 0;
         double yPoseMod = 0;    
         swerveVectors = m_subsystem_manager.m_drivetrain.m_swerveVectors;
-        System.out.println(swerveVectors);
         xPose += xPoseMod;
         yPose += yPoseMod;
         heading = m_subsystem_manager.m_drivetrain.gyro.getAngle();

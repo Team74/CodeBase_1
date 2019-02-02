@@ -7,8 +7,8 @@ import com.revrobotics.CANPIDController;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-//import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-//import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class SwerveModule {
     public final double maxVel = 0.0;
@@ -30,6 +30,13 @@ public class SwerveModule {
         drive_motor = _drive_motor;
         rotate_motor = _rotate_motor;
         drive_encoder = _drive_encoder;
+
+        rotate_motor.configFactoryDefault(kTimeoutMs);
+
+        rotate_motor.configSelectedFeedbackSensor(FeedbackDevice.Analog, kPIDLoopIdx, kTimeoutMs);
+        rotate_motor.configFeedbackNotContinuous(false, kTimeoutMs);
+
+        rotate_motor.setNeutralMode(NeutralMode.Brake);
 
     }
     /*
