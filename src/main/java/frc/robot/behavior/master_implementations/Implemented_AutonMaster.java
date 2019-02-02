@@ -19,10 +19,15 @@ public class Implemented_AutonMaster extends AutonMaster {
 
     public Implemented_AutonMaster(SubsystemManager subsystem_manager){
         super(subsystem_manager);
-        pathfollower = new PathFollower(subsystem_manager);
 
+        //get currentAuto from the drive station or have it hardcoded
+        currentAuto = "Test Path";
         currentPath = paths.m_paths.get(currentAuto);
+        pathfollower = new PathFollower(subsystem_manager);
+        pathfollower.pathToTrajectory(currentPath, true); //not sure about what to pass in for isReversed
     }
 
-     public void update(double dT){     }
+    public void update(double dt) {
+        pathfollower.update(dt);
+    }
 }

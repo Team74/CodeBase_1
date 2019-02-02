@@ -15,8 +15,9 @@ import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
 import jaci.pathfinder.modifiers.SwerveModifier;
 
-public class PathFollower extends Implemented_AutonMaster {
+public class PathFollower implements Updateable {
 
+    public SubsystemManager m_subsystem_manager;
     public RobotMap map = m_subsystem_manager.m_robotMap;       // a reference -- do not try to make a new one.
     public Drivetrain drive = m_subsystem_manager.m_drivetrain; // ditto
     public Paths paths = new Paths();
@@ -38,7 +39,7 @@ public class PathFollower extends Implemented_AutonMaster {
     private EncoderFollower rbFollower = new EncoderFollower();
 
     public PathFollower(SubsystemManager subsystem_manager) {
-        super(subsystem_manager);
+        m_subsystem_manager = subsystem_manager;
         // kP, kI, kD, 1/maxVel, acceleration gain
         lfFollower.configurePIDVA(0.0, 0.0, 0.0, 1/map.maxVel, 0);
         rfFollower.configurePIDVA(0.0, 0.0, 0.0, 1/map.maxVel, 0);
@@ -47,10 +48,10 @@ public class PathFollower extends Implemented_AutonMaster {
 
     }
 
-    public void update(double dt) {  
+    public void update(double dt) {
         //Using Pathfinder to follow the path
         //https://github.com/JacisNonsense/Pathfinder/wiki/Pathfinder-for-FRC---Java
-        
+
         double[][] swerveVectors = new double[4][2];//{ {lf_a, lf_m}, {rf_a, rf_m}, {lb_a, lb_m}, {rb_a, rf_a} }
         //!! null needs to be replaced with a get encoder position !!
         //Pathfinder.boundHalfDegrees(Pathfinder.r2d(lfFollower.getHeading())) returns a degree value on the scale of -180 to 180, We conert it to d

@@ -11,14 +11,14 @@ public class Paths {
 
     public HashMap<String, Waypoint[]> m_paths  = new HashMap<String, Waypoint[]>();
 
-    public Waypoint[] testPath;
-
     public Paths(){
-        testPath = new Waypoint[] {
+        Waypoint[] testPath = new Waypoint[] {
             new Waypoint(-4, -1, Pathfinder.d2r(-45)),
             new Waypoint(-2, -2, 0),
             new Waypoint(0, 0, 0)
         };
+
+        //I would assume we would read in a list of waypoints from a file somewhere around here
 
         m_paths.put("Test Path", testPath);
     }
