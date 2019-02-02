@@ -7,8 +7,8 @@ import com.revrobotics.CANPIDController;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
+//import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+//import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class SwerveModule {
     public final double maxVel = 0.0;
@@ -32,7 +32,7 @@ public class SwerveModule {
         drive_encoder = _drive_encoder;
 
     }
-
+    /*
     public void instantiateSteeringPID(double kP, double kI, double kD, double kF, double kIZone, boolean kSensorPhase, boolean kMotorInvert){
         //HandleEncoder encoder = new HandleEncoder(rotate_motor, kSensorPhase);
         //Start by reseting everything to factory defaults
@@ -69,11 +69,11 @@ public class SwerveModule {
         velController.setIZone(kIZone, kSlotIdx);
         velController.setOutputRange(-1.0, 1.0, kSlotIdx);
         drive_motor.burnFlash();
-        */
+        /*
 
 
     }
-
+    */
     public void setModule(double targetAngle, double _targetSpeed){
         double totalRotation;
         double currentRotation;
@@ -126,6 +126,12 @@ public class SwerveModule {
         velController.setReference(targetSpeed, ControlType.kVelocity);
         rotate_motor.set(ControlMode.Position, _targetRotation);
     }
+
+    public void setMotorsPercentOutput(double _angularVelocity, double _targetSpeed) {
+        rotate_motor.set(_angularVelocity);
+        drive_motor.set(_targetSpeed);
+    }
+
     public double angleToEncoder(double angle){
         double encoder;
         encoder = (angle/360) * 2048;

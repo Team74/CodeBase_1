@@ -26,6 +26,7 @@ public class Drivetrain implements Updateable {
         lb = new SwerveModule( robotmap.Drive_1, robotmap.Drive_E_1, robotmap.Steering_1);
         rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2);
         rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3);
+        
 
         //Set up PIDFs here
         /*
@@ -80,10 +81,12 @@ public class Drivetrain implements Updateable {
 
     public void manageModules(double swerveVectors[][]){
         m_swerveVectors = swerveVectors;
+
         lf.setModule(m_swerveVectors[0][0], m_swerveVectors[0][1]);
         rf.setModule(m_swerveVectors[1][0], m_swerveVectors[1][1]);
         lb.setModule(m_swerveVectors[2][0], m_swerveVectors[2][1]);
         rb.setModule(m_swerveVectors[3][0], m_swerveVectors[3][1]);
+        
     }
 
     public void update(double dt) {

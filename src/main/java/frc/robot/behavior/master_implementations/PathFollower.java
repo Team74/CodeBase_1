@@ -4,8 +4,6 @@ import frc.robot.SubsystemManager;
 import frc.robot.behavior.master_implementations.Implemented_AutonMaster;
 import frc.robot.RobotMap;
 
-import static org.junit.Assume.assumeNoException;
-
 import frc.robot.Drivetrain;
 import frc.robot.behavior.master_implementations.Paths;
 
@@ -54,6 +52,7 @@ public class PathFollower extends Implemented_AutonMaster {
         double[][] swerveVectors = new double[4][2];//{ {lf_a, lf_m}, {rf_a, rf_m}, {lb_a, lb_m}, {rb_a, rf_a} }
         //!! null needs to be replaced with a get encoder position !!
         //Pathfinder.boundHalfDegrees(Pathfinder.r2d(lfFollower.getHeading())) returns a degree value on the scale of -180 to 180, We conert it to d
+        /*
         swerveVectors[0][0] = boundHalfRadians(lfFollower.getHeading());
         swerveVectors[0][1] = lfFollower.calculate(null);
         swerveVectors[1][0] = boundHalfRadians(rfFollower.getHeading());
@@ -62,7 +61,7 @@ public class PathFollower extends Implemented_AutonMaster {
         swerveVectors[2][1] = lbFollower.calculate(null);
         swerveVectors[3][0] = boundHalfRadians(rbFollower.getHeading());
         swerveVectors[3][1] = rbFollower.calculate(null);
-
+        */
         drive.manageModules(swerveVectors);
     }
 
@@ -88,11 +87,14 @@ public class PathFollower extends Implemented_AutonMaster {
         lbFollower.setTrajectory(lb);
         rbFollower.setTrajectory(rb);
         //Null needs to be replaced with the getPosition() for encoders. Not the integrated NEOs though because they return doubles.
+        /*
         lfFollower.configureEncoder(null, map.countsPerRev, map.wheelDiameter);
         rfFollower.configureEncoder(null, map.countsPerRev, map.wheelDiameter);
         lbFollower.configureEncoder(null, map.countsPerRev, map.wheelDiameter);
         rbFollower.configureEncoder(null, map.countsPerRev, map.wheelDiameter);
+        */
     }
+
 
     public static double boundHalfRadians(double angleRadians) {
         while (angleRadians >= Math.PI) angleRadians -= 2*(Math.PI);
