@@ -24,22 +24,18 @@ public class SwerveModule {
     public final int kPIDLoopIdx = 0;
     public final int kTimeoutMs = 30;
 
+    public int zeroOffset = 0;
+
     CANPIDController velController = new CANPIDController(drive_motor);
 
-    public SwerveModule(CANSparkMax _drive_motor, CANEncoder _drive_encoder, WPI_TalonSRX _rotate_motor) {
+    public SwerveModule(CANSparkMax _drive_motor, CANEncoder _drive_encoder, WPI_TalonSRX _rotate_motor, int _zeroOffset) {
         drive_motor = _drive_motor;
         rotate_motor = _rotate_motor;
         drive_encoder = _drive_encoder;
-
-        rotate_motor.configFactoryDefault(kTimeoutMs);
-
-        rotate_motor.configSelectedFeedbackSensor(FeedbackDevice.Analog, kPIDLoopIdx, kTimeoutMs);
-        rotate_motor.configFeedbackNotContinuous(false, kTimeoutMs);
-
-        rotate_motor.setNeutralMode(NeutralMode.Brake);
+        zeroOffset = _zeroOffset;
 
     }
-    /*
+    
     public void instantiateSteeringPID(double kP, double kI, double kD, double kF, double kIZone, boolean kSensorPhase, boolean kMotorInvert){
         //HandleEncoder encoder = new HandleEncoder(rotate_motor, kSensorPhase);
         //Start by reseting everything to factory defaults
@@ -61,11 +57,14 @@ public class SwerveModule {
 		rotate_motor.config_kI(kPIDLoopIdx, kI, kTimeoutMs);
         rotate_motor.config_kD(kPIDLoopIdx, kD, kTimeoutMs);
 
+        rotate_motor.configMotionCruiseVelocity(230, kTimeoutMs);
+        rotate_motor.configMotionAcceleration(150, kTimeoutMs);
+
         rotate_motor.configSelectedFeedbackSensor(FeedbackDevice.Analog, kPIDLoopIdx, kTimeoutMs);
         rotate_motor.setSensorPhase(kSensorPhase);
         rotate_motor.configFeedbackNotContinuous(false, kTimeoutMs);
     }
-
+    /*
     public void instantiateVelocityPID(double kP, double kI, double kD, double kF, double kIZone) {
         //We're going to tune the gains using the tuner than hardcode them.
         /*
@@ -89,14 +88,14 @@ public class SwerveModule {
         double angleModifier;
         double absAngleDelta;
         //Get current angle
-        totalRotation= rotate_motor.getSelectedSensorPosition();
+        totalRotation = rotate_motor.getSelectedSensorPosition();
         currentRotation = totalRotation % 2048;
         //Change currentRotation to be in radians
-        currentAngle = 2*Math.PI*(currentRotation/2048);
+        currentAngle = 2*(Math.PI)*(currentRotation/2048);
         //Change target angle to be on the 0 to 2pi range
         targetAngle = targetAngle < 0 ? targetAngle + 2*(Math.PI) : targetAngle;
         //Calculate the differance in angle
-        angleDelta = (targetAngle - currentAngle)/Math.PI*180;  //convert to degrees
+        angleDelta = (targetAngle - currentAngle)/(Math.PI)*180;  //convert to degrees
         absAngleDelta = Math.abs(angleDelta);
         //Begin checking cases
         targetSpeed = _targetSpeed;
@@ -108,7 +107,7 @@ public class SwerveModule {
             //Reverse wheel direction
             targetSpeed = _targetSpeed * -1;
         }else if (180 < absAngleDelta && absAngleDelta < 270) {
-            angleModifier = angleDelta -180;
+            angleModifier = angleDelta - 180;
             //Reverse wheel direction
             targetSpeed = _targetSpeed * -1;
         }else if (270 <= absAngleDelta && absAngleDelta < 360) {
@@ -128,10 +127,8 @@ public class SwerveModule {
     }
 
     public void setMotors(double _targetRotation, double _targetSpeed) {
-        //This needs to be converted to the "native units of RPM" for the SparkMax, whatever that means, from the Meters per Seconds.
-        targetSpeed = _targetSpeed * maxVel;
-        velController.setReference(targetSpeed, ControlType.kVelocity);
-        rotate_motor.set(ControlMode.Position, _targetRotation);
+        drive_motor.set(_targetSpeed);
+        rotate_motor.set(ControlMode.MotionMagic, (_targetRotation + zeroOffset));
     }
 
     public void setMotorsPercentOutput(double _angularVelocity, double _targetSpeed) {
