@@ -10,12 +10,18 @@ public class Test1_TeleopMaster extends TeleopMaster {
     SwerveModule currentMotor;
     String output_extra;
 
+    double k_deadband = 0.05;
+
 
     public Test1_TeleopMaster(SubsystemManager subsystem_manager, InputManager input_manager) {
         super(subsystem_manager, input_manager);
 
         currentMotor = m_subsystem_manager.m_drivetrain.lb;
         output_extra = "lb: ";
+     }
+
+     private double handleDeadband(double input) {
+        return Math.abs(input) <= k_deadband ? 0 : input; 
      }
 
     public void update(double dt) {  
@@ -52,12 +58,32 @@ public class Test1_TeleopMaster extends TeleopMaster {
             currentMotor.rotate_motor.stopMotor();
         }
         */
+
+        double leftX = m_input_manager.m_joysticks.get("0lx");
+        double leftY = -1*m_input_manager.m_joysticks.get("0ly");
+        double rightX = m_input_manager.m_joysticks.get("0rx");
+
+
+
+
+        //System.out.println("leftX: " + leftX);
+        //System.out.println("leftY: " + leftY);
+        //System.out.println("rightX: " + rightX);
+
         
-        double magnitude = Math.hypot(m_input_manager.m_joysticks.get("0lx"), m_input_manager.m_joysticks.get("0ly"));
-        double angle = Math.atan2(m_input_manager.m_joysticks.get("0lx"), m_input_manager.m_joysticks.get("0ly"));
-        double rotation = m_input_manager.m_joysticks.get("0rx");
+        //double magnitude = Math.hypot(handleDeadband(leftX), handleDeadband(leftY));
+        //double angle = Math.atan2(handleDeadband(leftX), handleDeadband(leftY));
+        double rotation = handleDeadband(rightX);
+
+        //System.out.println("Magnitude: " + magnitude);
+        //System.out.println("Magnitude: " + magnitude);
+        //System.out.println("Rotation: " + rotation);
+        //System.out.println("Angle: " + angle);
+        //System.out.println("Rotation: " + rotation);
+        //System.out.println("\n");
+        
 
         //m_subsystem_manager.m_drivetrain.setMove(magnitude, angle, rotation);
-        m_subsystem_manager.m_drivetrain.setMove(0, angle, 0);
+        m_subsystem_manager.m_drivetrain.setMove(handleDeadband(leftX), handleDeadband(leftY), rotation);
     }
 }

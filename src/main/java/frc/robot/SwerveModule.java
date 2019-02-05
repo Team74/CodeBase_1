@@ -24,6 +24,8 @@ public class SwerveModule {
     public final int kPIDLoopIdx = 0;
     public final int kTimeoutMs = 30;
 
+    public final int kEncoderTicks = 1024;
+
     public int zeroOffset = 0;
 
     CANPIDController velController = new CANPIDController(drive_motor);
@@ -80,6 +82,12 @@ public class SwerveModule {
 
     }
     */
+
+    public void stopMotors() {
+        rotate_motor.stopMotor();
+        drive_motor.stopMotor();
+    }
+
     public void setModule(double targetAngle, double _targetSpeed){
         double totalRotation;
         double currentRotation;
@@ -87,22 +95,43 @@ public class SwerveModule {
         double angleDelta;
         double angleModifier;
         double absAngleDelta;
+
+        double targetEncoderTicks = angleToEncoder(Math.toDegrees(targetAngle));
+
+
         //Get current angle
         totalRotation = rotate_motor.getSelectedSensorPosition();
-        currentRotation = totalRotation % 2048;
+        currentRotation = totalRotation - zeroOffset;// % kEncoderTicks;
         //Change currentRotation to be in radians
-        currentAngle = 2*(Math.PI)*(currentRotation/2048);
+        currentAngle = 2*(Math.PI)*(currentRotation/kEncoderTicks);
+        currentAngle %= 2*Math.PI;
+        currentAngle = Math.abs(currentAngle) < 0.0087266463 ? 0 : currentAngle;
+        currentAngle = currentAngle < 0 ? currentAngle + 2*Math.PI : currentAngle;
         //Change target angle to be on the 0 to 2pi range
         targetAngle = targetAngle < 0 ? targetAngle + 2*(Math.PI) : targetAngle;
         //Calculate the differance in angle
-        angleDelta = (targetAngle - currentAngle)/(Math.PI)*180;  //convert to degrees
+        angleDelta = Math.toDegrees(targetAngle - currentAngle);  //convert to degrees
+
+
+        angleDelta = Math.abs(angleDelta) > 180 ? angleDelta - Math.signum(angleDelta)*180 : angleDelta;
+
         absAngleDelta = Math.abs(angleDelta);
         //Begin checking cases
         targetSpeed = _targetSpeed;
 
-        if (0 <= absAngleDelta && absAngleDelta <= 90) {
+        if(absAngleDelta <= 90) {
             angleModifier = angleDelta;
-        }else if (90 < absAngleDelta && absAngleDelta <= 180) {
+        } else {
+            angleModifier = angleDelta - 180 * Math.signum(angleDelta);
+            targetSpeed *= -1;
+        }
+
+        System.out.println("Angle Delta: " + angleDelta);//(angleDelta/Math.PI*180));
+
+/*
+        if (absAngleDelta <= 90) {
+            angleModifier = angleDelta;
+        } /*else if (90 < absAngleDelta && absAngleDelta <= 180) {
             angleModifier = angleDelta - 180;//or -(180-delta)
             //Reverse wheel direction
             targetSpeed = _targetSpeed * -1;
@@ -111,19 +140,21 @@ public class SwerveModule {
             //Reverse wheel direction
             targetSpeed = _targetSpeed * -1;
         }else if (270 <= absAngleDelta && absAngleDelta < 360) {
-            angleModifier = angleDelta - 360;// or -(360-delta)
-        }else {
-            angleModifier = 0;
-        }
+            angleModifier = Math.abs(absAngleDelta - 360);// or -(360-delta)
+        *///  else {
+         //   angleModifier = 0;
+        //}//*/
         //Convert angle modifier to encoder
         angleModifier = angleToEncoder(angleModifier);
         //Add modifier to current total rotation to get new referance point
         targetRotation = currentRotation + angleModifier;
-        //targetRotation = (double)(Math.round(targetRotation));
-        if(targetRotation < 0) {
-          targetRotation += 2048;
-        }
-        setMotors(targetRotation, targetSpeed);
+        //targetRotation = (double)(Math.round(targetRotation));//*/
+        /*if(targetEncoderTicks < 0) {
+            targetEncoderTicks += kEncoderTicks;
+        }//*/
+        setMotors(targetRotation, 0);
+        //setMotors(targetRotation, 0);//targetSpeed);
+        //System.out.println("Current Rotation: " + currentRotation);
     }
 
     public void setMotors(double _targetRotation, double _targetSpeed) {
@@ -138,7 +169,7 @@ public class SwerveModule {
 
     public double angleToEncoder(double angle){
         double encoder;
-        encoder = (angle/360) * 2048;
+        encoder = (angle/360) * kEncoderTicks;
         return encoder;
     }
     }
