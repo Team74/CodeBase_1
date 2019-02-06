@@ -98,19 +98,61 @@ public class SwerveModule {
 
         double targetEncoderTicks = angleToEncoder(Math.toDegrees(targetAngle));
 
+    // System.out.println("Raw target Angle: " + Math.toDegrees(targetAngle));
 
         //Get current angle
         totalRotation = rotate_motor.getSelectedSensorPosition();
+        //System.out.println("Encoder: " + totalRotation);
         currentRotation = totalRotation - zeroOffset;// % kEncoderTicks;
         //Change currentRotation to be in radians
         currentAngle = 2*(Math.PI)*(currentRotation/kEncoderTicks);
+        //currentAngle += Math.PI;
         currentAngle %= 2*Math.PI;
-        currentAngle = Math.abs(currentAngle) < 0.0087266463 ? 0 : currentAngle;
-        currentAngle = currentAngle < 0 ? currentAngle + 2*Math.PI : currentAngle;
+        //System.out.println(Math.toDegrees(currentAngle));
+        //currentAngle = currentAngle < 0 ? currentAngle + 2*Math.PI : currentAngle;
+        if(Math.abs(currentAngle) > Math.PI) {
+            currentAngle -= Math.signum(currentAngle)*Math.PI*2;
+        }
+        //currentAngle = Math.abs(currentAngle) < 0.0087266463 ? 0 : currentAngle;
+
+        //System.out.println("Current Angle: " + Math.toDegrees(currentAngle));
+
+        
         //Change target angle to be on the 0 to 2pi range
         targetAngle = targetAngle < 0 ? targetAngle + 2*(Math.PI) : targetAngle;
+
+//more attempts to fix here
+
+        currentAngle = Math.toDegrees(currentAngle);
+        targetAngle = Math.toDegrees(targetAngle);
+
+        double adjustedCurrentAngle = currentAngle < 0 ? 180 + currentAngle : currentAngle;
+        double adjustedTargetAngle = targetAngle < 0 ? 180 + targetAngle : targetAngle;
+
+        double adjustedDelta = (adjustedTargetAngle - adjustedCurrentAngle);
+        adjustedDelta = Math.abs(adjustedDelta) > 90 ? -Math.signum(adjustedDelta)*(180 - Math.abs(adjustedDelta)) : adjustedDelta;
+        
+        //Convert angle modifier to encoder
+        angleModifier = angleToEncoder(adjustedDelta);
+        
+        //Add modifier to current total rotation to get new referance point
+        targetRotation = currentRotation + angleModifier;
+
+        targetSpeed = _targetSpeed;
+        double speedDifference = (targetAngle - currentAngle);
+        speedDifference += (speedDifference > 180) ? -360 : ( (speedDifference < -180) ? 360 : 0 );
+        if(Math.abs(speedDifference) > 90) {
+            targetSpeed *= -1;
+        }
+
+
+        
+        setMotors(targetRotation, targetSpeed * 0.4);
+        
+//more attempts to fix here
+
         //Calculate the differance in angle
-        angleDelta = Math.toDegrees(targetAngle - currentAngle);  //convert to degrees
+        /*angleDelta = Math.toDegrees(targetAngle - currentAngle);  //convert to degrees
 
 
         angleDelta = Math.abs(angleDelta) > 180 ? angleDelta - Math.signum(angleDelta)*180 : angleDelta;
@@ -125,8 +167,13 @@ public class SwerveModule {
             angleModifier = angleDelta - 180 * Math.signum(angleDelta);
             targetSpeed *= -1;
         }
-
-        System.out.println("Angle Delta: " + angleDelta);//(angleDelta/Math.PI*180));
+//*/
+    /*    System.out.println("Angle Delta: " + adjustedDelta);// angleDelta);//(angleDelta/Math.PI*180));
+        System.out.println("Current Angle: " + adjustedCurrentAngle); //currentAngle/Math.PI*180);
+        System.out.println("Target Angle: " + adjustedTargetAngle);// targetAngle/Math.PI*180);
+        System.out.println("Target Speed: " + targetSpeed);
+        System.out.println("-");
+//*/
 
 /*
         if (absAngleDelta <= 90) {
@@ -145,15 +192,13 @@ public class SwerveModule {
          //   angleModifier = 0;
         //}//*/
         //Convert angle modifier to encoder
-        angleModifier = angleToEncoder(angleModifier);
+        //angleModifier = angleToEncoder(angleModifier);
+        
         //Add modifier to current total rotation to get new referance point
-        targetRotation = currentRotation + angleModifier;
-        //targetRotation = (double)(Math.round(targetRotation));//*/
-        /*if(targetEncoderTicks < 0) {
-            targetEncoderTicks += kEncoderTicks;
-        }//*/
-        setMotors(targetRotation, 0);
-        //setMotors(targetRotation, 0);//targetSpeed);
+        //targetRotation = currentRotation + angleModifier;
+        
+        //setMotors(targetRotation, 0*targetSpeed / 10);
+        
         //System.out.println("Current Rotation: " + currentRotation);
     }
 

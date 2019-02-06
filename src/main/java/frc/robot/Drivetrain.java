@@ -31,10 +31,10 @@ public class Drivetrain implements Updateable {
 
     Drivetrain(RobotMap robotmap) {
 
-        lf = new SwerveModule( robotmap.Drive_0, robotmap.Drive_E_0, robotmap.Steering_0, 229);
-        lb = new SwerveModule( robotmap.Drive_1, robotmap.Drive_E_1, robotmap.Steering_1, 115);
-        rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2, 318);
-        rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3, 423);
+        lf = new SwerveModule( robotmap.Drive_0, robotmap.Drive_E_0, robotmap.Steering_0, 229 + 512);
+        lb = new SwerveModule( robotmap.Drive_1, robotmap.Drive_E_1, robotmap.Steering_1, 115 + 512);
+        rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2, 724 - 512);
+        rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3, 423 + 512);
         
         lf.drive_motor.setInverted(true);
         lf.drive_motor.burnFlash();
@@ -65,7 +65,7 @@ public class Drivetrain implements Updateable {
 
     }
 
-    public void setMove(double vx, double vy, double rotation) {
+    public void setMove(double speed, double angle, double rotation) {
       //rotation is in rad/sec
       //info for this section from https://www.chiefdelphi.com/t/paper-4-wheel-independent-drive-independent-steering-swerve/107383
 
@@ -74,8 +74,15 @@ public class Drivetrain implements Updateable {
       
         //angle -= (Math.PI)/4;
 
-        //double vx = speed*Math.sin(angle); //angle is measured from 0 being straight forward, positive turning right, from -pi to pi
-        //double vy = speed*Math.cos(angle);
+   //     angle 
+
+
+
+
+
+
+        double vx = speed*Math.sin(angle); //angle is measured from 0 being straight forward, positive turning right, from -pi to pi
+        double vy = speed*Math.cos(angle);
 
         double A = vx - rotation*(LENGTH)/2;
         double B = vx + rotation*(LENGTH)/2;
@@ -120,9 +127,9 @@ public class Drivetrain implements Updateable {
         //Set module args are targetAngle, targetSpeed
 
         lf.setModule(m_swerveVectors[0][0], m_swerveVectors[0][1]);
-//        rf.setModule(m_swerveVectors[1][0], m_swerveVectors[1][1]);
-  //      lb.setModule(m_swerveVectors[2][0], m_swerveVectors[2][1]);
-    //    rb.setModule(m_swerveVectors[3][0], m_swerveVectors[3][1]);
+        rf.setModule(m_swerveVectors[1][0], m_swerveVectors[1][1]);
+        lb.setModule(m_swerveVectors[2][0], m_swerveVectors[2][1]);
+        rb.setModule(m_swerveVectors[3][0], m_swerveVectors[3][1]);
 //*/   
     }
 
