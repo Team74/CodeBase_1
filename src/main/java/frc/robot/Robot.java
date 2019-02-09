@@ -32,7 +32,6 @@ public class Robot extends TimedRobot {
         m_subsystem_manager.setCurrentMaster(new Implemented_AutonMaster(m_subsystem_manager));
          //or whatever other auton we want -- we'll probably need something for SmartDashboard eventually
 
-         //m_subsystem_manager.m_currentMaster.currentAuto = "";
          m_timer.start();
         }   
     public void autonomousPeriodic() {

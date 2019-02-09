@@ -16,8 +16,8 @@ public class RobotMap {
 
     public final double countsPerRev = 0.0;//Encoder ticks per revolution for drive motors
     
-    //These need to be in meters per second
-    public final double maxVel = 0.0;
+    //These need to be in the same units
+    public final double maxVel = 5200;//This is just read from the encoder
     public final double maxAccel = 0.0;
     public final double maxJerk = 0.0;
 

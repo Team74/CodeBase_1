@@ -10,11 +10,17 @@ public class Drivetrain implements Updateable {
     public final boolean kMotorInvert = true;
     public final boolean kSensorPhase = false;
 
-    public final double kIZone = 0;
-    public final double kP = 15;
-    public final double kI = 0;
-    public final double kD = 0;
-    public final double kF = 4.44;
+    public final double kIZoneS = 0;
+    public final double kPS = 15;
+    public final double kIS = 0;
+    public final double kDS = 0;
+    public final double kFS = 4.44;
+
+    public final double kIZoneV = 0;
+    public final double kPV = 0.0002;
+    public final double kIV = 1e-6;
+    public final double kDV = 0;
+    public final double kFV = 0;
 
     //public  spark_1;    //add more motors
     public SwerveModule lf;
@@ -31,32 +37,33 @@ public class Drivetrain implements Updateable {
 
     Drivetrain(RobotMap robotmap) {
 
-        lf = new SwerveModule( robotmap.Drive_0, robotmap.Drive_E_0, robotmap.Steering_0, 229 + 512);
+        lf = new SwerveModule( robotmap.Drive_0, robotmap.Drive_E_0, robotmap.Steering_0, 229);
         lb = new SwerveModule( robotmap.Drive_1, robotmap.Drive_E_1, robotmap.Steering_1, 115 + 512);
-        rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2, 724 - 512);
-        rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3, 423 + 512);
+        rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2, 50);
+        rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3, 423);
         
         lf.drive_motor.setInverted(true);
         lf.drive_motor.burnFlash();
         
-        lb.drive_motor.setInverted(true);
+        lb.drive_motor.setInverted(false);
         lb.drive_motor.burnFlash();
         
-        rf.drive_motor.setInverted(true);
+        rf.drive_motor.setInverted(false);
         rf.drive_motor.burnFlash();
+
+        rb.drive_motor.setInverted(false);
+        rb.drive_motor.burnFlash();
         //Set up PIDFs here
 
-        lf.instantiateSteeringPID(kP, kI, kD, kF, kIZone, kSensorPhase, kMotorInvert);
-        rf.instantiateSteeringPID(kP, kI, kD, kF, kIZone, kSensorPhase, kMotorInvert);
-        lb.instantiateSteeringPID(kP, kI, kD, kF, kIZone, kSensorPhase, kMotorInvert);
-        rb.instantiateSteeringPID(kP, kI, kD, kF, kIZone, kSensorPhase, kMotorInvert);
+        lf.instantiateSteeringPID(kPS, kIS, kDS, kFS, kIZoneS, kSensorPhase, kMotorInvert);
+        rf.instantiateSteeringPID(kPS, kIS, kDS, kFS, kIZoneS, kSensorPhase, kMotorInvert);
+        lb.instantiateSteeringPID(kPS, kIS, kDS, kFS, kIZoneS, kSensorPhase, kMotorInvert);
+        rb.instantiateSteeringPID(kPS, kIS, kDS, kFS, kIZoneS, kSensorPhase, kMotorInvert);  
         
-        /*
-        lf.instantiateVelocityPID(kP, kI, kD, kF, kIZone);
-        rf.instantiateVelocityPID(kP, kI, kD, kF, kIZone);
-        lb.instantiateVelocityPID(kP, kI, kD, kF, kIZone);
-        rb.instantiateVelocityPID(kP, kI, kD, kF, kIZone);
-        */
+        lf.instantiateVelocityPID(kPV, kIV, kDV, kFV, kIZoneV);
+        rf.instantiateVelocityPID(kPV, kIV, kDV, kFV, kIZoneV);
+        lb.instantiateVelocityPID(kPV, kIV, kDV, kFV, kIZoneV);
+        rb.instantiateVelocityPID(kPV, kIV, kDV, kFV, kIZoneV);
 
         gyro = robotmap.navX;
 
@@ -68,19 +75,8 @@ public class Drivetrain implements Updateable {
     public void setMove(double speed, double angle, double rotation) {
       //rotation is in rad/sec
       //info for this section from https://www.chiefdelphi.com/t/paper-4-wheel-independent-drive-independent-steering-swerve/107383
-
-
-      double[][] swerveVectors = new double[4][2];//{ {lf_a, lf_m}, {rf_a, rf_m}, {lb_a, lb_m}, {rb_a, rf_a} }
-      
-        //angle -= (Math.PI)/4;
-
-   //     angle 
-
-
-
-
-
-
+        double[][] swerveVectors = new double[4][2];//{ {lf_a, lf_m}, {rf_a, rf_m}, {lb_a, lb_m}, {rb_a, rf_a} }
+        
         double vx = speed*Math.sin(angle); //angle is measured from 0 being straight forward, positive turning right, from -pi to pi
         double vy = speed*Math.cos(angle);
 
@@ -98,15 +94,16 @@ public class Drivetrain implements Updateable {
         max = swerveVectors[1][1] > max ? swerveVectors[1][1] : max; 
         max = swerveVectors[2][1] > max ? swerveVectors[2][1] : max; 
         max = swerveVectors[3][1] > max ? swerveVectors[3][1] : max;
+        //If max is greater than 1, normalize all magnitudes to something less than 1
         if (max > 1){
             swerveVectors[0][1] /= max; 
             swerveVectors[1][1] /= max; 
             swerveVectors[2][1] /= max; 
-            swerveVectors[3][1] /= max; //normalizing them
+            swerveVectors[3][1] /= max; 
         }
 
-        swerveVectors[0][0] = Math.atan2(B,D);//lf 2   these are negative because for some reason we're doing angles in the opposite direction
-        swerveVectors[1][0] = Math.atan2(B,C);//rf 1   we should maybe change that
+        swerveVectors[0][0] = Math.atan2(B,D);//lf 2
+        swerveVectors[1][0] = Math.atan2(B,C);//rf 1
         swerveVectors[2][0] = Math.atan2(A,D);//lb 3
         swerveVectors[3][0] = Math.atan2(A,C);//rb 4
 

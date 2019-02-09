@@ -62,30 +62,19 @@ public class Test1_TeleopMaster extends TeleopMaster {
         double leftX = -m_input_manager.m_joysticks.get("0lx");
         double leftY = m_input_manager.m_joysticks.get("0ly");
         double rightX = m_input_manager.m_joysticks.get("0rx");
-
-
-
-
-        //System.out.println("leftX: " + leftX);
-        //System.out.println("leftY: " + leftY);
-        //System.out.println("rightX: " + rightX);
-
         
         double magnitude = Math.hypot(handleDeadband(leftX), handleDeadband(leftY));
         double angle = Math.atan2(handleDeadband(leftX), handleDeadband(leftY));
         double rotation = handleDeadband(rightX);
 
-        //System.out.println("Magnitude: " + magnitude);
-        //System.out.println("Magnitude: " + magnitude);
-        //System.out.println("Rotation: " + rotation);
-        //System.out.println("Angle: " + angle);
-        //System.out.println("Rotation: " + rotation);
-        //System.out.println("\n");
-
         double gyroVal = m_subsystem_manager.m_drivetrain.gyro.getAngle();
         gyroVal *= Math.PI / 180;
 
-        System.out.println(gyroVal);
+        //System.out.println("lf: " + m_subsystem_manager.m_drivetrain.lf.drive_encoder.getVelocity());
+        System.out.println("rf: " + m_subsystem_manager.m_drivetrain.rf.drive_encoder.getVelocity());
+        //System.out.println("lb: " + m_subsystem_manager.m_drivetrain.lb.drive_encoder.getVelocity());
+        //System.out.println("rb: " + m_subsystem_manager.m_drivetrain.rb.drive_encoder.getVelocity());
+
 
         angle -= gyroVal;
 

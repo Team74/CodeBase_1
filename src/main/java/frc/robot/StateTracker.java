@@ -17,7 +17,7 @@ public class StateTracker implements Updateable {
         m_subsystem_manager = _subsystem_manager;
     }
 
-    //Use the swerve module vectors from PathFollower to track the robots Position as we move through auton
+    //We can get a vector for each pod and use them to figure out how the robot is moving throughout auton and the match.
     public void update(double dt){
         double xPoseMod = 0;
         double yPoseMod = 0;    
