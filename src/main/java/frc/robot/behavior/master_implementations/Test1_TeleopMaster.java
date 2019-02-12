@@ -58,7 +58,6 @@ public class Test1_TeleopMaster extends TeleopMaster {
             currentMotor.rotate_motor.stopMotor();
         }
         */
-
         double leftX = -m_input_manager.m_joysticks.get("0lx");
         double leftY = m_input_manager.m_joysticks.get("0ly");
         double rightX = m_input_manager.m_joysticks.get("0rx");
@@ -70,11 +69,10 @@ public class Test1_TeleopMaster extends TeleopMaster {
         double gyroVal = m_subsystem_manager.m_drivetrain.gyro.getAngle();
         gyroVal *= Math.PI / 180;
 
-        //System.out.println("lf: " + m_subsystem_manager.m_drivetrain.lf.drive_encoder.getVelocity());
-        System.out.println("rf: " + m_subsystem_manager.m_drivetrain.rf.drive_encoder.getVelocity());
-        //System.out.println("lb: " + m_subsystem_manager.m_drivetrain.lb.drive_encoder.getVelocity());
-        //System.out.println("rb: " + m_subsystem_manager.m_drivetrain.rb.drive_encoder.getVelocity());
-
+        //System.out.println("lf: " + m_subsystem_manager.m_drivetrain.lf.drive_encoder.getPosition());
+        //System.out.println("rf: " + m_subsystem_manager.m_drivetrain.rf.drive_encoder.getPosition());
+        //System.out.println("lb: " + m_subsystem_manager.m_drivetrain.lb.drive_encoder.getPosition());
+        //System.out.println("rb: " + m_subsystem_manager.m_drivetrain.rb.drive_encoder.getPosition());
 
         angle -= gyroVal;
 
@@ -86,5 +84,6 @@ public class Test1_TeleopMaster extends TeleopMaster {
 
         m_subsystem_manager.m_drivetrain.setMove(magnitude, angle, rotation);
         //m_subsystem_manager.m_drivetrain.setMove(handleDeadband(leftX), handleDeadband(leftY), rotation);
+        
     }
 }

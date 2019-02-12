@@ -26,7 +26,7 @@ public class SwerveModule {
 
     public final int kEncoderTicks = 1024;
 
-    public final int kMaxVel = 1000;
+    public final int kMaxVel = 3000;
 
     public int zeroOffset = 0;
 

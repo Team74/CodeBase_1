@@ -26,6 +26,7 @@ public class SubsystemManager implements Updateable {
         m_drivetrain = new Drivetrain(m_robotMap);
         m_statetracker = new StateTracker(this);
         m_listOfUpdatingObjects.add(m_statetracker);
+        m_robotMap.navX.reset();
         // ... set up other Subsystems if present
         /*
         -setup all the Subsystems: Drivetrain, Grabbers, etc.
