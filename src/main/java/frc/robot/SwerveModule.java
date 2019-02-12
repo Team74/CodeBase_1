@@ -93,12 +93,8 @@ public class SwerveModule {
         double totalRotation;
         double currentRotation;
         double currentAngle;
-        double angleDelta;
         double angleModifier;
-        double absAngleDelta;
-
-        double targetEncoderTicks = angleToEncoder(Math.toDegrees(targetAngle));
-
+        
     // System.out.println("Raw target Angle: " + Math.toDegrees(targetAngle));
 
         //Get current angle
