@@ -124,5 +124,9 @@ public class Test1_TeleopMaster extends TeleopMaster {
             m_drivePlanner.angle += (m_drivePlanner.angle < -Math.PI) ? 2*Math.PI : 0;
             m_drivePlanner.angle -= (m_drivePlanner.angle > Math.PI) ? 2*Math.PI : 0;        
         }
+
+        if (m_buttons.get("0back")){
+            m_subsystem_manager.m_driveplanner.m_drivetrain.resetGyro();
+        }
     }
 }

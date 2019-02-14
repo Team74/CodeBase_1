@@ -37,10 +37,10 @@ public class Drivetrain implements Updateable {
 
     Drivetrain(RobotMap robotmap) {
 
-        lf = new SwerveModule( robotmap.Drive_0, robotmap.Drive_E_0, robotmap.Steering_0, 224);
-        lb = new SwerveModule( robotmap.Drive_1, robotmap.Drive_E_1, robotmap.Steering_1, 112 + 512);
-        rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2, 30);
-        rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3, 283 + 512);
+        lf = new SwerveModule( robotmap.Drive_0, robotmap.Drive_E_0, robotmap.Steering_0, 227 + 512);
+        lb = new SwerveModule( robotmap.Drive_1, robotmap.Drive_E_1, robotmap.Steering_1, 111);
+        rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2, 46 + 512);
+        rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3, 303);
         
         lf.drive_motor.setInverted(true);
         lf.drive_motor.burnFlash();
@@ -117,6 +117,10 @@ public class Drivetrain implements Updateable {
         lb.setModule(m_swerveVectors[2][0], m_swerveVectors[2][1]);
         rb.setModule(m_swerveVectors[3][0], m_swerveVectors[3][1]);
 //*/   
+    }
+
+    public void resetGyro(){
+        gyro.reset();
     }
 
     public void update(double dt) {
