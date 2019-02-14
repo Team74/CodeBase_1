@@ -65,7 +65,7 @@ public class PathFollower implements Updateable {
         swerveVectors[3][0] = boundHalfRadians(rbFollower.getHeading());
         swerveVectors[3][1] = rbFollower.calculate(null);
         */
-        drive.manageModules(swerveVectors);
+        //drive.manageModules(swerveVectors);
     }
 
     public void pathToTrajectory(Waypoint[] path, boolean isReversed) {

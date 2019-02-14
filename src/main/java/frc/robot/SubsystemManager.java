@@ -15,17 +15,22 @@ public class SubsystemManager implements Updateable {
 
     //all the individual subsystems
     public RobotMap m_robotMap;   //plus this one, which directly handles the physical components
+    public DrivePlanner m_driveplanner;
     public Drivetrain m_drivetrain;   //this will get the RobotMap passed in when it's created
     public StateTracker m_statetracker;
+    public CHAOSDashboard mDashboard;
     //etc. ...
     //incidentally, do we want these to be private? Commands should go from masters through SubsystemManager, and SubsystemManager can deal with converting that into individual commands.
 
     SubsystemManager() {
 
         m_robotMap = new RobotMap(); //initializes all the physical hardware bits, but doesn't do anything further with them
+        m_driveplanner = new DrivePlanner(this);
         m_drivetrain = new Drivetrain(m_robotMap);
         m_statetracker = new StateTracker(this);
-        m_listOfUpdatingObjects.add(m_statetracker);
+        mDashboard = new CHAOSDashboard(this);
+        m_listOfUpdatingObjects.add(m_driveplanner);
+        m_listOfUpdatingObjects.add(mDashboard);
         m_robotMap.navX.reset();
         // ... set up other Subsystems if present
         /*

@@ -3,25 +3,41 @@ package frc.robot.behavior.master_implementations;
 import frc.robot.SubsystemManager;
 import frc.robot.SwerveModule;
 import frc.robot.InputManager;
+import frc.robot.DrivePlanner;
+
 import frc.robot.behavior.TeleopMaster;
+
+import frc.utils.Utilities;
+
+import java.util.HashMap;
 
 public class Test1_TeleopMaster extends TeleopMaster {
 
     SwerveModule currentMotor;
     String output_extra;
 
-    double k_deadband = 0.05;
+    private DrivePlanner m_drivePlanner;
 
+    private HashMap<String, Boolean> m_buttons;
+    private HashMap<String, Double> m_joysticks;
+
+    private double kDeadband = 0.05;
+    
+    public double lx;
+    public double ly;
+    public double rx;
+
+    public double gyroVal;
 
     public Test1_TeleopMaster(SubsystemManager subsystem_manager, InputManager input_manager) {
         super(subsystem_manager, input_manager);
 
         currentMotor = m_subsystem_manager.m_drivetrain.lb;
         output_extra = "lb: ";
-     }
 
-     private double handleDeadband(double input) {
-        return Math.abs(input) <= k_deadband ? 0 : input; 
+        m_drivePlanner = m_subsystem_manager.m_driveplanner;
+        m_buttons = m_input_manager.m_buttons;
+        m_joysticks = m_input_manager.m_joysticks;
      }
 
     public void update(double dt) {  
@@ -58,32 +74,55 @@ public class Test1_TeleopMaster extends TeleopMaster {
             currentMotor.rotate_motor.stopMotor();
         }
         */
-        double leftX = -m_input_manager.m_joysticks.get("0lx");
-        double leftY = m_input_manager.m_joysticks.get("0ly");
-        double rightX = m_input_manager.m_joysticks.get("0rx");
-        
-        double magnitude = Math.hypot(handleDeadband(leftX), handleDeadband(leftY));
-        double angle = Math.atan2(handleDeadband(leftX), handleDeadband(leftY));
-        double rotation = handleDeadband(rightX);
+        if (m_buttons.get("0l_trigger") && !m_buttons.get("0r_trigger")) {
+            m_drivePlanner.setSpeed(DrivePlanner.Speed.Low);
+        } else if (m_buttons.get("0r_trigger") && !m_buttons.get("0l_trigger")) {
+            m_drivePlanner.setSpeed(DrivePlanner.Speed.High);
+        } else if (m_buttons.get("0l_trigger") && m_buttons.get("0r_trigger")) {
+            System.out.println("Screw you");
+        } else {
+            m_drivePlanner.setSpeed(DrivePlanner.Speed.Mid);
+        }
+        if (m_buttons.get("0d_down") || m_buttons.get("0d_up") || m_buttons.get("0d_right") || m_buttons.get("0d_left")) {
+            if(m_buttons.get("0d_down")) {
+                m_drivePlanner.angle = 180;
+                m_drivePlanner.speed = .5;
+                m_drivePlanner.rotation = 0;
+            } else if (m_buttons.get("0d_up")) {
+                m_drivePlanner.angle = 0;
+                m_drivePlanner.speed = .5;
+                m_drivePlanner.rotation = 0;
+            } else if (m_buttons.get("0d_right")) {
+                m_drivePlanner.angle = 90;
+                m_drivePlanner.speed = .5;
+                m_drivePlanner.rotation = 0;
+            } else if (m_buttons.get("0d_left")) {
+                m_drivePlanner.angle = 270;
+                m_drivePlanner.speed = .5;
+                m_drivePlanner.rotation = 0;
+            }
+        } else {
+            //Handle the swerve drive
+            lx = -m_joysticks.get("0lx");
+            ly = m_joysticks.get("0ly");
+            rx = -m_joysticks.get("0rx");
 
-        double gyroVal = m_subsystem_manager.m_drivetrain.gyro.getAngle();
-        gyroVal *= Math.PI / 180;
+            lx = Utilities.handleDeadband(lx, kDeadband);
+            ly = Utilities.handleDeadband(ly, kDeadband);
+            rx = Utilities.handleDeadband(rx, kDeadband);
 
-        //System.out.println("lf: " + m_subsystem_manager.m_drivetrain.lf.drive_encoder.getPosition());
-        //System.out.println("rf: " + m_subsystem_manager.m_drivetrain.rf.drive_encoder.getPosition());
-        //System.out.println("lb: " + m_subsystem_manager.m_drivetrain.lb.drive_encoder.getPosition());
-        //System.out.println("rb: " + m_subsystem_manager.m_drivetrain.rb.drive_encoder.getPosition());
+            m_drivePlanner.speed = Math.hypot(lx, ly);
+            m_drivePlanner.angle = Math.atan2(ly, lx);
+            m_drivePlanner.rotation = rx/30;
 
-        angle -= gyroVal;
+            gyroVal = m_subsystem_manager.m_drivetrain.gyro.getAngle();
+            gyroVal *= Math.PI / 180;
 
-        angle %= 2*Math.PI;
-        angle += (angle < -Math.PI) ? 2*Math.PI : 0;
-        angle -= (angle > Math.PI) ? 2*Math.PI : 0;
+            m_drivePlanner.angle -= gyroVal;
 
-        rotation /= 30;
-
-        m_subsystem_manager.m_drivetrain.setMove(magnitude, angle, rotation);
-        //m_subsystem_manager.m_drivetrain.setMove(handleDeadband(leftX), handleDeadband(leftY), rotation);
-        
+            m_drivePlanner.angle %= 2*Math.PI;
+            m_drivePlanner.angle += (m_drivePlanner.angle < -Math.PI) ? 2*Math.PI : 0;
+            m_drivePlanner.angle -= (m_drivePlanner.angle > Math.PI) ? 2*Math.PI : 0;        
+        }
     }
 }

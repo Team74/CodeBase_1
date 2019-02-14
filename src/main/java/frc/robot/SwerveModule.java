@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class SwerveModule {
-    public final double maxVel = 0.0;
 
     public CANSparkMax drive_motor;
     public CANEncoder drive_encoder;
@@ -26,7 +25,7 @@ public class SwerveModule {
 
     public final int kEncoderTicks = 1024;
 
-    public final int kMaxVel = 3000;
+    public double kMaxVel = 3000.0;
 
     public int zeroOffset = 0;
 
@@ -42,7 +41,6 @@ public class SwerveModule {
     }
     
     public void instantiateSteeringPID(double kP, double kI, double kD, double kF, double kIZone, boolean kSensorPhase, boolean kMotorInvert){
-        //HandleEncoder encoder = new HandleEncoder(rotate_motor, kSensorPhase);
         //Start by reseting everything to factory defaults
         rotate_motor.configFactoryDefault(kTimeoutMs);
 
@@ -71,22 +69,15 @@ public class SwerveModule {
     }
     
     public void instantiateVelocityPID(double kP, double kI, double kD, double kF, double kIZone) {
-        //We're going to tune the gains using the tuner than hardcode them.
         velController.setP(kP, kSlotIdx);
         velController.setI(kI, kSlotIdx);
         velController.setD(kD, kSlotIdx);
         velController.setFF(kF, kSlotIdx);
         velController.setIZone(kIZone, kSlotIdx);
         velController.setOutputRange(-1.0, 1.0, kSlotIdx);
+
+        drive_motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         drive_motor.burnFlash();
-        
-
-
-    }
-
-    public void stopMotors() {
-        rotate_motor.stopMotor();
-        drive_motor.stopMotor();
     }
 
     public void setModule(double targetAngle, double _targetSpeed){
@@ -95,25 +86,18 @@ public class SwerveModule {
         double currentAngle;
         double angleModifier;
         
-    // System.out.println("Raw target Angle: " + Math.toDegrees(targetAngle));
-
         //Get current angle
         totalRotation = rotate_motor.getSelectedSensorPosition();
-        //System.out.println("Encoder: " + totalRotation);
         currentRotation = totalRotation - zeroOffset;// % kEncoderTicks;
         //Change currentRotation to be in radians
         currentAngle = 2*(Math.PI)*(currentRotation/kEncoderTicks);
-        //currentAngle += Math.PI;
         currentAngle %= 2*Math.PI;
-        //System.out.println(Math.toDegrees(currentAngle));
-        //currentAngle = currentAngle < 0 ? currentAngle + 2*Math.PI : currentAngle;
+
         if(Math.abs(currentAngle) > Math.PI) {
             currentAngle -= Math.signum(currentAngle)*Math.PI*2;
         }        
         //Change target angle to be on the 0 to 2pi range
         targetAngle = targetAngle < 0 ? targetAngle + 2*(Math.PI) : targetAngle;
-
-        //more attempts to fix here
 
         currentAngle = Math.toDegrees(currentAngle);
         targetAngle = Math.toDegrees(targetAngle);
@@ -140,13 +124,18 @@ public class SwerveModule {
     }
 
     public void setMotors(double _targetRotation, double _targetSpeed) {
-        double targetSpeed = _targetSpeed * kMaxVel;
-        if (targetSpeed != 0){
-            velController.setReference(targetSpeed, ControlType.kVelocity);
-        } else{
+        if (_targetSpeed == 0) {
             drive_motor.stopMotor();
+            rotate_motor.stopMotor();
+        } else {
+            double targetSpeed = _targetSpeed * kMaxVel;
+            if (targetSpeed != 0){
+                velController.setReference(targetSpeed, ControlType.kVelocity);
+            } else{
+                drive_motor.stopMotor();
+            }
+            rotate_motor.set(ControlMode.MotionMagic, (_targetRotation + zeroOffset));
         }
-        rotate_motor.set(ControlMode.MotionMagic, (_targetRotation + zeroOffset));
     }
 
     public void setMotorsPercentOutput(double _angularVelocity, double _targetSpeed) {
