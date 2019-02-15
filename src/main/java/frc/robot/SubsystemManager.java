@@ -5,6 +5,8 @@ Essentially the 'model' class -- keeps track of the state of the robot, contains
 */
 
 import java.util.ArrayList;
+
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import frc.robot.Updateable;
 import frc.robot.behavior.Master;
 
@@ -14,15 +16,19 @@ public class SubsystemManager implements Updateable {
     private ArrayList<Updateable> m_listOfUpdatingObjects = new ArrayList<Updateable>();  //this will have duplicate references from the various things below, plus others -- positionTracker, etc.
 
     //all the individual subsystems
-    public RobotMap m_robotMap;   //plus this one, which directly handles the physical components
+    public RobotMap m_robotMap;         //plus this one, which directly handles the physical components
     public DrivePlanner m_driveplanner;
-    public Drivetrain m_drivetrain;   //this will get the RobotMap passed in when it's created
+    public Drivetrain m_drivetrain;     //this will get the RobotMap passed in when it's created
     public StateTracker m_statetracker;
     public CHAOSDashboard mDashboard;
+
+    public PowerDistributionPanel pdp;
     //etc. ...
     //incidentally, do we want these to be private? Commands should go from masters through SubsystemManager, and SubsystemManager can deal with converting that into individual commands.
 
     SubsystemManager() {
+
+        pdp = new PowerDistributionPanel();
 
         m_robotMap = new RobotMap(); //initializes all the physical hardware bits, but doesn't do anything further with them
         m_driveplanner = new DrivePlanner(this);

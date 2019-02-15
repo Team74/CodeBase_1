@@ -21,7 +21,7 @@ public class Test1_TeleopMaster extends TeleopMaster {
     private HashMap<String, Boolean> m_buttons;
     private HashMap<String, Double> m_joysticks;
 
-    private double kDeadband = 0.05;
+    private double kDeadband = 0.1;
     
     public double lx;
     public double ly;
@@ -74,18 +74,17 @@ public class Test1_TeleopMaster extends TeleopMaster {
             currentMotor.rotate_motor.stopMotor();
         }
         */
-        if (m_buttons.get("0l_trigger") && !m_buttons.get("0r_trigger")) {
-            m_drivePlanner.setSpeed(DrivePlanner.Speed.Low);
-        } else if (m_buttons.get("0r_trigger") && !m_buttons.get("0l_trigger")) {
-            m_drivePlanner.setSpeed(DrivePlanner.Speed.High);
-        } else if (m_buttons.get("0l_trigger") && m_buttons.get("0r_trigger")) {
-            System.out.println("Screw you");
+        if (m_buttons.get("0l_trigger")) {
+            m_drivePlanner.currentSpeed = DrivePlanner.Speed.Low;
+        } else if (m_buttons.get("0r_trigger")){
+            m_drivePlanner.currentSpeed = DrivePlanner.Speed.High;
         } else {
-            m_drivePlanner.setSpeed(DrivePlanner.Speed.Mid);
+            m_drivePlanner.currentSpeed = DrivePlanner.Speed.Mid;
         }
+
         if (m_buttons.get("0d_down") || m_buttons.get("0d_up") || m_buttons.get("0d_right") || m_buttons.get("0d_left")) {
             if(m_buttons.get("0d_down")) {
-                m_drivePlanner.angle = 180;
+                m_drivePlanner.angle = Math.PI;
                 m_drivePlanner.speed = .5;
                 m_drivePlanner.rotation = 0;
             } else if (m_buttons.get("0d_up")) {
@@ -93,19 +92,19 @@ public class Test1_TeleopMaster extends TeleopMaster {
                 m_drivePlanner.speed = .5;
                 m_drivePlanner.rotation = 0;
             } else if (m_buttons.get("0d_right")) {
-                m_drivePlanner.angle = 90;
+                m_drivePlanner.angle = Math.PI/2;
                 m_drivePlanner.speed = .5;
                 m_drivePlanner.rotation = 0;
             } else if (m_buttons.get("0d_left")) {
-                m_drivePlanner.angle = 270;
+                m_drivePlanner.angle = 3*(Math.PI/2);
                 m_drivePlanner.speed = .5;
                 m_drivePlanner.rotation = 0;
             }
-        } else {
             //Handle the swerve drive
-            lx = -m_joysticks.get("0lx");
+        } else {
+            lx = m_joysticks.get("0lx");
             ly = m_joysticks.get("0ly");
-            rx = -m_joysticks.get("0rx");
+            rx = m_joysticks.get("0rx");
 
             lx = Utilities.handleDeadband(lx, kDeadband);
             ly = Utilities.handleDeadband(ly, kDeadband);
@@ -122,11 +121,14 @@ public class Test1_TeleopMaster extends TeleopMaster {
 
             m_drivePlanner.angle %= 2*Math.PI;
             m_drivePlanner.angle += (m_drivePlanner.angle < -Math.PI) ? 2*Math.PI : 0;
-            m_drivePlanner.angle -= (m_drivePlanner.angle > Math.PI) ? 2*Math.PI : 0;        
-        }
+            m_drivePlanner.angle -= (m_drivePlanner.angle > Math.PI) ? 2*Math.PI : 0;
+            m_drivePlanner.angle += Math.PI/2;
+        }        
 
         if (m_buttons.get("0back")){
-            m_subsystem_manager.m_driveplanner.m_drivetrain.resetGyro();
+            System.out.println("Gyro Reset");
+            m_subsystem_manager.m_drivetrain.gyro.reset();
         }
-    }
+        
+    }//Function closing
 }

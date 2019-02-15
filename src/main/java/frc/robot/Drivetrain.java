@@ -35,11 +35,11 @@ public class Drivetrain implements Updateable {
     private final double WIDTH;
     private final double LENGTH;
 
-    Drivetrain(RobotMap robotmap) {
+    public Drivetrain(RobotMap robotmap) {
 
         lf = new SwerveModule( robotmap.Drive_0, robotmap.Drive_E_0, robotmap.Steering_0, 227 + 512);
         lb = new SwerveModule( robotmap.Drive_1, robotmap.Drive_E_1, robotmap.Steering_1, 111);
-        rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2, 46 + 512);
+        rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2, 143 + 512);
         rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3, 303);
         
         lf.drive_motor.setInverted(true);
@@ -116,6 +116,11 @@ public class Drivetrain implements Updateable {
         rf.setModule(m_swerveVectors[1][0], m_swerveVectors[1][1]);
         lb.setModule(m_swerveVectors[2][0], m_swerveVectors[2][1]);
         rb.setModule(m_swerveVectors[3][0], m_swerveVectors[3][1]);
+
+        lf.setCurrentAngle();
+        lb.setCurrentAngle();
+        rf.setCurrentAngle();
+        rb.setCurrentAngle();
 //*/   
     }
 
@@ -124,7 +129,7 @@ public class Drivetrain implements Updateable {
     }
 
     public void update(double dt) {
-        //prob nothing here
+
     }
 
 }

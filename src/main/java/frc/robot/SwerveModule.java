@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.utils.Utilities;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -18,6 +20,8 @@ public class SwerveModule {
 
     private double targetRotation;
     private double targetSpeed;
+
+    public double currentAngle;
 
     public final int kSlotIdx = 0;
     public final int kPIDLoopIdx = 0;
@@ -109,7 +113,7 @@ public class SwerveModule {
         adjustedDelta = Math.abs(adjustedDelta) > 90 ? -Math.signum(adjustedDelta)*(180 - Math.abs(adjustedDelta)) : adjustedDelta;
         
         //Convert angle modifier to encoder
-        angleModifier = angleToEncoder(adjustedDelta);
+        angleModifier = Utilities.angleToEncoder(adjustedDelta, kEncoderTicks);
         
         //Add modifier to current total rotation to get new referance point
         targetRotation = currentRotation + angleModifier;
@@ -143,9 +147,9 @@ public class SwerveModule {
         drive_motor.set(_targetSpeed);
     }
 
-    public double angleToEncoder(double angle){
-        double encoder;
-        encoder = (angle/360) * kEncoderTicks;
-        return encoder;
+    public void setCurrentAngle(){
+        currentAngle = Utilities.encoderToAngle((rotate_motor.getSelectedSensorPosition() % kEncoderTicks), kEncoderTicks);
+        //currentAngle += zeroOffset;
     }
-    }
+
+}
