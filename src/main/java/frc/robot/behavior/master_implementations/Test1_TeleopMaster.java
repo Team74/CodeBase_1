@@ -41,7 +41,6 @@ public class Test1_TeleopMaster extends TeleopMaster {
      }
 
     public void update(double dt) {  
-        /*
         if(m_input_manager.m_buttons.get("0a")) {
             currentMotor = m_subsystem_manager.m_drivetrain.lb;
             output_extra = "lb: ";
@@ -61,19 +60,7 @@ public class Test1_TeleopMaster extends TeleopMaster {
         double encoderCount = currentMotor.rotate_motor.getSelectedSensorPosition(0);
         double encoderVelocity = currentMotor.rotate_motor.getSelectedSensorVelocity(0);
         System.out.println(output_extra + encoderCount);
-        if (m_input_manager.m_buttons.get("0r_bumper")){
-            currentMotor.setMotors(
-                0,
-                0
-                );
-        } else if (m_input_manager.m_buttons.get("0l_bumper")) {
-            currentMotor.setMotorsPercentOutput(
-                m_input_manager.m_joysticks.get("0rx"),
-                m_input_manager.m_joysticks.get("0ly"));
-        } else {
-            currentMotor.rotate_motor.stopMotor();
-        }
-        */
+        
         if (m_buttons.get("0l_trigger")) {
             m_drivePlanner.currentSpeed = DrivePlanner.Speed.Low;
         } else if (m_buttons.get("0r_trigger")){

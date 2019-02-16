@@ -38,9 +38,9 @@ public class Drivetrain implements Updateable {
     public Drivetrain(RobotMap robotmap) {
 
         lf = new SwerveModule( robotmap.Drive_0, robotmap.Drive_E_0, robotmap.Steering_0, 222 + 512);
-        lb = new SwerveModule( robotmap.Drive_1, robotmap.Drive_E_1, robotmap.Steering_1, 111);
-        rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2, 12);
-        rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3, 303);
+        lb = new SwerveModule( robotmap.Drive_1, robotmap.Drive_E_1, robotmap.Steering_1, 149);
+        rf = new SwerveModule( robotmap.Drive_2, robotmap.Drive_E_2, robotmap.Steering_2, 0 + 512);
+        rb = new SwerveModule( robotmap.Drive_3, robotmap.Drive_E_3, robotmap.Steering_3, 492);
         
         lf.drive_motor.setInverted(true);
         lf.drive_motor.burnFlash();
@@ -85,10 +85,10 @@ public class Drivetrain implements Updateable {
         double C = vy - rotation*(WIDTH)/2;
         double D = vy + rotation*(WIDTH)/2;
         
-        swerveVectors[0][1] = Math.sqrt(Math.pow(B,2) + Math.pow(D,2));//lf 2
-        swerveVectors[1][1] = Math.sqrt(Math.pow(B,2) + Math.pow(C,2));//rf 1
-        swerveVectors[2][1] = Math.sqrt(Math.pow(A,2) + Math.pow(D,2));//lb 3
-        swerveVectors[3][1] = Math.sqrt(Math.pow(A,2) + Math.pow(C,2));//rb 4
+        swerveVectors[0][1] = Math.hypot(B, D);//lf 2
+        swerveVectors[1][1] = Math.hypot(B, C);//rf 1
+        swerveVectors[2][1] = Math.hypot(A, D);//lb 3
+        swerveVectors[3][1] = Math.hypot(A, C);//rb 4
 
         double max = swerveVectors[0][1]; 
         max = swerveVectors[1][1] > max ? swerveVectors[1][1] : max; 
@@ -121,7 +121,6 @@ public class Drivetrain implements Updateable {
         lb.setCurrentAngle();
         rf.setCurrentAngle();
         rb.setCurrentAngle();
-//*/   
     }
 
     public void resetGyro(){
