@@ -27,9 +27,6 @@ public class SubsystemManager implements Updateable {
     //incidentally, do we want these to be private? Commands should go from masters through SubsystemManager, and SubsystemManager can deal with converting that into individual commands.
 
     SubsystemManager() {
-
-        pdp = new PowerDistributionPanel();
-
         m_robotMap = new RobotMap(); //initializes all the physical hardware bits, but doesn't do anything further with them
         m_driveplanner = new DrivePlanner(this);
         m_drivetrain = new Drivetrain(m_robotMap);

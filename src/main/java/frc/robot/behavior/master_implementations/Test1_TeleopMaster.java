@@ -92,12 +92,12 @@ public class Test1_TeleopMaster extends TeleopMaster {
                 m_drivePlanner.speed = .5;
                 m_drivePlanner.rotation = 0;
             } else if (m_buttons.get("0d_right")) {
-                m_drivePlanner.angle = Math.PI/2;
+                m_drivePlanner.angle = .5 * Math.PI;
                 m_drivePlanner.speed = .5;
                 m_drivePlanner.rotation = 0;
             } else if (m_buttons.get("0d_left")) {
-                m_drivePlanner.angle = 3*(Math.PI/2);
-                m_drivePlanner.speed = .5;
+                m_drivePlanner.angle = 1.5 * Math.PI;
+                m_drivePlanner.speed = -.5;
                 m_drivePlanner.rotation = 0;
             }
             //Handle the swerve drive
@@ -129,6 +129,5 @@ public class Test1_TeleopMaster extends TeleopMaster {
             System.out.println("Gyro Reset");
             m_subsystem_manager.m_drivetrain.gyro.reset();
         }
-        
     }//Function closing
 }

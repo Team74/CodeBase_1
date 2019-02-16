@@ -148,8 +148,9 @@ public class SwerveModule {
     }
 
     public void setCurrentAngle(){
-        currentAngle = Utilities.encoderToAngle((rotate_motor.getSelectedSensorPosition() % kEncoderTicks), kEncoderTicks);
-        //currentAngle += zeroOffset;
+        double currentEncoder = rotate_motor.getSelectedSensorPosition() % kEncoderTicks;
+        currentAngle = Utilities.encoderToAngle(currentEncoder, kEncoderTicks);
+        currentAngle += zeroOffset;
     }
 
 }

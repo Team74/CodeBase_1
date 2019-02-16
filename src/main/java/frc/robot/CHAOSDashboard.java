@@ -17,9 +17,7 @@ public class CHAOSDashboard implements Updateable {
 
     public ShuffleboardTab testTab;
     public NetworkTableEntry sanityCheck;
-
-    public NetworkTableEntry batteryVoltage;
-
+    
     public NetworkTableEntry lfAngle;
     public NetworkTableEntry lbAngle;
     public NetworkTableEntry rfAngle;
@@ -34,8 +32,6 @@ public class CHAOSDashboard implements Updateable {
 
         sanityCheck = testTab.add("Sanity Check", true).getEntry();
 
-        batteryVoltage = testTab.add("Battery Voltage", mSubsystemManager.pdp.getVoltage()).getEntry();
-
         lfAngle = testTab.add("LF Angle", mSubsystemManager.m_drivetrain.lf.currentAngle).getEntry();
         lbAngle = testTab.add("LB Angle", mSubsystemManager.m_drivetrain.lf.currentAngle).getEntry();
         rfAngle = testTab.add("RF Angle", mSubsystemManager.m_drivetrain.lf.currentAngle).getEntry();
@@ -46,8 +42,6 @@ public class CHAOSDashboard implements Updateable {
     }
 
     public void update(double dt){
-        batteryVoltage.setDouble(mSubsystemManager.pdp.getVoltage());
-
         lfAngle.setDouble(mSubsystemManager.m_drivetrain.lf.currentAngle);
         lbAngle.setDouble(mSubsystemManager.m_drivetrain.lb.currentAngle);
         rfAngle.setDouble(mSubsystemManager.m_drivetrain.rf.currentAngle);
