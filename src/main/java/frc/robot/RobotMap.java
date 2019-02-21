@@ -22,6 +22,13 @@ public class RobotMap {
     public final double maxJerk = 0.0;
 
     //bunch of references to motors and such
+    /*
+    public CANSparkMax Drive_0 = new CANSparkMax(11, CANSparkMaxLowLevel.MotorType.kBrushless);//Front left
+    public CANSparkMax Drive_1 = new CANSparkMax(22, CANSparkMaxLowLevel.MotorType.kBrushless);//Back left
+    public CANSparkMax Drive_2 = new CANSparkMax(33, CANSparkMaxLowLevel.MotorType.kBrushless);//Front right
+    public CANSparkMax Drive_3 = new CANSparkMax(44, CANSparkMaxLowLevel.MotorType.kBrushless);//Back right
+    */
+
     public CANSparkMax Drive_0 = new CANSparkMax(11, CANSparkMaxLowLevel.MotorType.kBrushless);//Front left
     public CANSparkMax Drive_1 = new CANSparkMax(22, CANSparkMaxLowLevel.MotorType.kBrushless);//Back left
     public CANSparkMax Drive_2 = new CANSparkMax(33, CANSparkMaxLowLevel.MotorType.kBrushless);//Front right
@@ -32,8 +39,13 @@ public class RobotMap {
     public CANEncoder Drive_E_2;
     public CANEncoder Drive_E_3;
 
-
+    /*
     public WPI_TalonSRX Steering_0 = new WPI_TalonSRX(37);//Front left
+    public WPI_TalonSRX Steering_1 = new WPI_TalonSRX(3);//Back left
+    public WPI_TalonSRX Steering_2 = new WPI_TalonSRX(4);//Front right
+    public WPI_TalonSRX Steering_3 = new WPI_TalonSRX(5);//Back right
+    */
+    public WPI_TalonSRX Steering_0 = new WPI_TalonSRX(6);//Front left
     public WPI_TalonSRX Steering_1 = new WPI_TalonSRX(3);//Back left
     public WPI_TalonSRX Steering_2 = new WPI_TalonSRX(4);//Front right
     public WPI_TalonSRX Steering_3 = new WPI_TalonSRX(5);//Back right
