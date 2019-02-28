@@ -80,11 +80,11 @@ public class Test1_TeleopMaster extends TeleopMaster {
                 m_drivePlanner.speed = .5;
                 m_drivePlanner.rotation = 0;
             } else if (m_buttons.get("0d_right")) {
-                m_drivePlanner.angle = .5 * Math.PI;
+                m_drivePlanner.angle = (Math.PI / 2);
                 m_drivePlanner.speed = .5;
                 m_drivePlanner.rotation = 0;
             } else if (m_buttons.get("0d_left")) {
-                m_drivePlanner.angle = 1.5 * Math.PI;
+                m_drivePlanner.angle = -(Math.PI / 2);
                 m_drivePlanner.speed = -.5;
                 m_drivePlanner.rotation = 0;
             }
